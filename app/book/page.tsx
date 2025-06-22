@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/context/AuthContext';
@@ -17,7 +17,7 @@ interface ServiceSelection {
   specialInstructions?: string;
 }
 
-export default function BookPage() {
+function BookPageContent() {
   const { user, isAuthenticated } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -794,5 +794,13 @@ export default function BookPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function BookPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BookPageContent />
+    </Suspense>
   );
 } 
