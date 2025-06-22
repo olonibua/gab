@@ -30,6 +30,7 @@ function BookPageContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Form data
   const [bookingData, setBookingData] = useState<Partial<BookingRequest>>({
@@ -200,28 +201,103 @@ function BookPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20">
+      {/* Enhanced Navigation */}
+      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200/60 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <Link href="/" className="text-2xl font-bold text-blue-600">
+              {/* Mobile menu button */}
+              <button
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="lg:hidden p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100/80 transition-all duration-200"
+              >
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              
+              <Link href="/" className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Gab'z Laundromat
               </Link>
-              <span className="text-sm text-gray-500 hidden sm:block">
+              <span className="text-xs md:text-sm text-gray-500 hidden sm:block">
                 Book Service
               </span>
             </div>
             
+            <div className="hidden lg:flex items-center space-x-6">
+              <Link href="/services" className="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">Services</Link>
+              <Link href="/dashboard" className="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">Dashboard</Link>
+              <Link href="/orders" className="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">My Orders</Link>
+            </div>
+            
             <div className="flex items-center space-x-4">
-              <Link href="/dashboard" className="text-gray-600 hover:text-gray-900">
-                Dashboard
-              </Link>
+              <div className="hidden lg:flex items-center space-x-3">
+                <span className="text-sm text-gray-600">Hello, {user?.name?.split(' ')[0] || 'User'}</span>
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full flex items-center justify-center">
+                  <span className="text-sm font-medium text-blue-600">
+                    {user?.name?.charAt(0) || 'U'}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </nav>
+
+      {/* Enhanced Mobile Sidebar */}
+      <div className={`fixed inset-0 z-50 lg:hidden ${isSidebarOpen ? 'block' : 'hidden'}`}>
+        <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm transition-opacity" onClick={() => setIsSidebarOpen(false)}></div>
+        <div className={`fixed inset-y-0 left-0 w-64 bg-white/95 backdrop-blur-xl border-r border-gray-200/50 shadow-2xl transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+          <div className="h-full flex flex-col py-6 px-4">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Menu</h2>
+              <button
+                onClick={() => setIsSidebarOpen(false)}
+                className="p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-white/60 transition-all duration-200"
+              >
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <Link href="/dashboard" className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50/80 py-3 px-4 rounded-xl transition-all duration-200 backdrop-blur-sm">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z" />
+                </svg>
+                <span>Dashboard</span>
+              </Link>
+              <Link href="/services" className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50/80 py-3 px-4 rounded-xl transition-all duration-200 backdrop-blur-sm">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                <span>Services</span>
+              </Link>
+              <Link href="/orders" className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50/80 py-3 px-4 rounded-xl transition-all duration-200 backdrop-blur-sm">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <span>My Orders</span>
+              </Link>
+              <div className="border-t border-gray-200/50 mt-4 pt-4">
+                <div className="flex items-center space-x-3 px-4 py-2">
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full flex items-center justify-center">
+                    <span className="text-sm font-medium text-blue-600">
+                      {user?.name?.charAt(0) || 'U'}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">{user?.name || 'User'}</p>
+                    <p className="text-xs text-gray-500">{user?.email}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Progress Steps */}
@@ -266,8 +342,8 @@ function BookPageContent() {
 
         {/* Step 1: Service Selection */}
         {currentStep === 1 && (
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Select Your Services</h2>
+                      <div className="bg-white/80 backdrop-blur-md rounded-xl md:rounded-2xl shadow-lg border border-gray-200/50 p-4 md:p-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8">Select Your Services</h2>
             
             {isLoading ? (
               <div className="grid md:grid-cols-2 gap-6">
@@ -283,22 +359,22 @@ function BookPageContent() {
               <div className="space-y-6">
                 {/* Selected Services Summary */}
                 {selectedServices.length > 0 && (
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                    <h3 className="font-semibold text-blue-900 mb-3">Selected Services</h3>
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-xl md:rounded-2xl p-4 md:p-6 mb-6 md:mb-8 shadow-sm">
+                    <h3 className="text-lg font-bold text-blue-900 mb-4">Selected Services</h3>
                     <div className="space-y-2">
                       {selectedServices.map((selection) => {
                         const service = services.find(s => s.$id === selection.serviceId);
                         if (!service) return null;
                         
                         return (
-                          <div key={selection.serviceId} className="flex items-center justify-between bg-white rounded p-3">
+                          <div key={selection.serviceId} className="flex items-center justify-between bg-white/80 backdrop-blur-sm rounded-lg md:rounded-xl p-3 md:p-4 shadow-sm border border-gray-100">
                             <div>
-                              <span className="font-medium">{service.name}</span>
-                              <span className="text-gray-600 ml-2">x{selection.quantity}</span>
+                              <span className="font-semibold text-gray-900">{service.name}</span>
+                              <span className="text-blue-600 ml-2 font-medium">x{selection.quantity}</span>
                             </div>
                             <button
                               onClick={() => removeService(selection.serviceId)}
-                              className="text-red-600 hover:text-red-700"
+                              className="text-red-500 hover:text-red-700 font-medium px-3 py-1 rounded-lg hover:bg-red-50 transition-all duration-200"
                             >
                               Remove
                             </button>
@@ -306,10 +382,10 @@ function BookPageContent() {
                         );
                       })}
                     </div>
-                    <div className="mt-4 pt-3 border-t border-blue-200">
+                    <div className="mt-6 pt-4 border-t border-blue-200/50">
                       <div className="flex justify-between items-center">
-                        <span className="font-semibold text-blue-900">Estimated Total:</span>
-                        <span className="text-xl font-bold text-blue-900">
+                        <span className="text-lg font-bold text-blue-900">Estimated Total:</span>
+                        <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                           {formatNairaFromKobo(calculateTotal())}
                         </span>
                       </div>
@@ -318,77 +394,179 @@ function BookPageContent() {
                 )}
 
                 {/* Available Services */}
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid gap-6 md:gap-8">
                   {services.map((service) => {
                     const isSelected = selectedServices.some(s => s.serviceId === service.$id);
                     
                     return (
                       <div
                         key={service.$id}
-                        className={`border rounded-lg p-4 transition-colors ${
+                        className={`border rounded-xl md:rounded-2xl p-4 md:p-8 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg ${
                           isSelected 
-                            ? 'border-blue-500 bg-blue-50' 
-                            : 'border-gray-200 hover:border-gray-300'
+                            ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-md' 
+                            : 'border-gray-200 hover:border-blue-300 bg-white/50 backdrop-blur-sm'
                         }`}
                       >
-                        <div className="flex justify-between items-start mb-3">
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900">{service.name}</h3>
-                            <span className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full capitalize">
-                              {service.type.replace('_', ' ')}
-                            </span>
+                        {/* Mobile Layout */}
+                        <div className="block md:hidden mb-4">
+                          <div className="flex items-start space-x-3 mb-3">
+                            <div className="w-12 h-12 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                              <span className="text-xl">
+                                {service.type === 'wash_and_fold' ? '🧺' : 
+                                 service.type === 'dry_cleaning' ? '👔' : 
+                                 service.type === 'ironing' ? '👕' : '🧽'}
+                              </span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-lg font-bold text-gray-900 leading-tight mb-1">{service.name}</h3>
+                              <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 rounded-full capitalize">
+                                {service.type.replace('_', ' ')}
+                              </span>
+                            </div>
+                            <div className="text-right flex-shrink-0">
+                              <div className="text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                                {formatNairaFromKobo(service.basePrice)}
+                              </div>
+                              {service.pricePerKg && (
+                                <div className="text-xs text-gray-600 font-medium">
+                                  +{formatNairaFromKobo(service.pricePerKg)}/kg
+                                </div>
+                              )}
+                            </div>
                           </div>
-                          <div className="text-right">
-                            <div className="text-lg font-bold text-blue-600">
+                        </div>
+
+                        {/* Desktop Layout */}
+                        <div className="hidden md:flex justify-between items-start mb-6">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-3 mb-3">
+                              <div className="w-12 h-12 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center">
+                                <span className="text-2xl">
+                                  {service.type === 'wash_and_fold' ? '🧺' : 
+                                   service.type === 'dry_cleaning' ? '👔' : 
+                                   service.type === 'ironing' ? '👕' : '🧽'}
+                                </span>
+                              </div>
+                              <div>
+                                <h3 className="text-2xl font-bold text-gray-900">{service.name}</h3>
+                                <span className="inline-flex items-center px-3 py-1 text-sm font-medium bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 rounded-full capitalize">
+                                  {service.type.replace('_', ' ')}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="text-right ml-4">
+                            <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                               {formatNairaFromKobo(service.basePrice)}
                             </div>
                             {service.pricePerKg && (
-                              <div className="text-sm text-gray-500">
+                              <div className="text-sm text-gray-600 font-medium">
                                 +{formatNairaFromKobo(service.pricePerKg)}/kg
                               </div>
                             )}
                           </div>
                         </div>
                         
-                        <p className="text-gray-600 text-sm mb-4">{service.description}</p>
+                        <p className="text-gray-600 text-sm md:text-base leading-relaxed mb-3 md:mb-6 px-1 md:px-0">{service.description}</p>
+                        
+                        {/* Mobile Info */}
+                        <div className="block md:hidden bg-gray-50 rounded-lg p-3 mb-4">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs font-medium text-gray-700">
+                              ⏱️ {service.estimatedDuration}h
+                            </span>
+                            <span className="text-xs font-medium text-gray-700">
+                              📍 Lagos
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Desktop Info */}
+                        <div className="hidden md:block bg-gray-50 rounded-xl p-4 mb-6">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-gray-700">
+                              ⏱️ Duration: {service.estimatedDuration} hours
+                            </span>
+                            <span className="text-sm font-medium text-gray-700">
+                              📍 Available in Lagos
+                            </span>
+                          </div>
+                        </div>
                         
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-500">
-                            {service.estimatedDuration} hours
-                          </span>
                           
                           {isSelected ? (
-                            <div className="flex items-center space-x-2">
-                              <button
-                                onClick={() => {
-                                  const selection = selectedServices.find(s => s.serviceId === service.$id);
-                                  if (selection) {
-                                    updateServiceQuantity(service.$id, selection.quantity - 1);
-                                  }
-                                }}
-                                className="w-8 h-8 bg-blue-600 text-white rounded-full hover:bg-blue-700"
-                              >
-                                -
-                              </button>
-                              <span className="font-medium">
-                                {selectedServices.find(s => s.serviceId === service.$id)?.quantity || 0}
-                              </span>
-                              <button
-                                onClick={() => {
-                                  const selection = selectedServices.find(s => s.serviceId === service.$id);
-                                  if (selection) {
-                                    updateServiceQuantity(service.$id, selection.quantity + 1);
-                                  }
-                                }}
-                                className="w-8 h-8 bg-blue-600 text-white rounded-full hover:bg-blue-700"
-                              >
-                                +
-                              </button>
-                            </div>
+                            <>
+                              {/* Mobile Selected State */}
+                              <div className="block md:hidden">
+                                <div className="flex items-center justify-between mb-3">
+                                  <span className="text-sm font-bold text-green-600">✓ Selected</span>
+                                  <div className="flex items-center space-x-2">
+                                    <button
+                                      onClick={() => {
+                                        const selection = selectedServices.find(s => s.serviceId === service.$id);
+                                        if (selection) {
+                                          updateServiceQuantity(service.$id, selection.quantity - 1);
+                                        }
+                                      }}
+                                      className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-bold text-sm"
+                                    >
+                                      -
+                                    </button>
+                                    <span className="text-lg font-bold text-gray-900 min-w-[2rem] text-center">
+                                      {selectedServices.find(s => s.serviceId === service.$id)?.quantity || 0}
+                                    </span>
+                                    <button
+                                      onClick={() => {
+                                        const selection = selectedServices.find(s => s.serviceId === service.$id);
+                                        if (selection) {
+                                          updateServiceQuantity(service.$id, selection.quantity + 1);
+                                        }
+                                      }}
+                                      className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-bold text-sm"
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Desktop Selected State */}
+                              <div className="hidden md:flex items-center justify-between w-full">
+                                <span className="text-lg font-bold text-green-600">✓ Selected</span>
+                                <div className="flex items-center space-x-3">
+                                  <button
+                                    onClick={() => {
+                                      const selection = selectedServices.find(s => s.serviceId === service.$id);
+                                      if (selection) {
+                                        updateServiceQuantity(service.$id, selection.quantity - 1);
+                                      }
+                                    }}
+                                    className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-bold text-lg"
+                                  >
+                                    -
+                                  </button>
+                                  <span className="text-xl font-bold text-gray-900 min-w-[3rem] text-center">
+                                    {selectedServices.find(s => s.serviceId === service.$id)?.quantity || 0}
+                                  </span>
+                                  <button
+                                    onClick={() => {
+                                      const selection = selectedServices.find(s => s.serviceId === service.$id);
+                                      if (selection) {
+                                        updateServiceQuantity(service.$id, selection.quantity + 1);
+                                      }
+                                    }}
+                                    className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-bold text-lg"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              </div>
+                            </>
                           ) : (
                             <button
                               onClick={() => addService(service.$id)}
-                              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl text-sm md:text-lg font-semibold transition-all duration-200 transform hover:scale-105"
                             >
                               Add Service
                             </button>
@@ -401,13 +579,14 @@ function BookPageContent() {
               </div>
             )}
 
-            <div className="flex justify-end mt-8">
+            <div className="flex justify-end mt-8 md:mt-10">
               <button
                 onClick={() => setCurrentStep(2)}
                 disabled={!canProceedToStep2}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg font-medium transition-colors"
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white px-6 md:px-10 py-3 md:py-4 rounded-lg md:rounded-xl text-base md:text-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
               >
-                Continue
+                <span className="hidden md:inline">Continue to Delivery Options →</span>
+                <span className="md:hidden">Continue →</span>
               </button>
             </div>
           </div>
