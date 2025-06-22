@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/context/AuthContext';
 import { databaseService } from '@/lib/database';
-import { Order, OrderStatus } from '@/lib/types';
+import { Order, OrderStatus, PaymentStatus } from '@/lib/types';
 import { formatNairaFromKobo } from '@/lib/validations';
 
-export default function DashboardPage() {
+function DashboardContent() {
   const { user, isAuthenticated, logout } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -394,5 +394,13 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }

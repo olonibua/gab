@@ -1,22 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { paymentService } from '@/lib/payment';
 import { databaseService } from '@/lib/database';
 
-export default function PaymentCallbackPage() {
-  const [isVerifying, setIsVerifying] = useState(true);
-  const [verificationResult, setVerificationResult] = useState<{
-    success: boolean;
-    message: string;
-    orderId?: string;
-    orderNumber?: string;
-  } | null>(null);
+interface VerificationResult {
+  success: boolean;
+  message: string;
+  orderId?: string;
+  orderNumber?: string;
+}
 
+function PaymentCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isVerifying, setIsVerifying] = useState(true);
+  const [verificationResult, setVerificationResult] = useState<VerificationResult | null>(null);
 
   useEffect(() => {
     const verifyPayment = async () => {
@@ -231,5 +232,15 @@ export default function PaymentCallbackPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PaymentCallbackPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    </div>}>
+      <PaymentCallbackContent />
+    </Suspense>
   );
 } 

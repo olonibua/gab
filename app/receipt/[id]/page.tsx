@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/context/AuthContext';
 import { databaseService } from '@/lib/database';
@@ -8,7 +8,7 @@ import { Order, OrderItem, Service, PaymentStatus } from '@/lib/types';
 import OrderReceipt from '@/components/OrderReceipt';
 import Link from 'next/link';
 
-export default function ReceiptPage() {
+function ReceiptPageContent() {
   const { id } = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -249,5 +249,13 @@ export default function ReceiptPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ReceiptPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ReceiptPageContent />
+    </Suspense>
   );
 } 

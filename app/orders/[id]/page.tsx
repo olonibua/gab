@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, use, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/context/AuthContext';
@@ -15,15 +15,16 @@ interface OrderDetailsPageProps {
   }>;
 }
 
-export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
-  const { user, isAuthenticated } = useAuth();
+function OrderDetailsContent({ params }: OrderDetailsPageProps) {
+  const resolvedParams = use(params);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const resolvedParams = use(params);
+  const { user, isAuthenticated } = useAuth();
   
   const [order, setOrder] = useState<Order | null>(null);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState('');
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
   const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
@@ -538,5 +539,13 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OrderDetailsContent params={params} />
+    </Suspense>
   );
 } 
