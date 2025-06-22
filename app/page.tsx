@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/context/AuthContext';
 import { databaseService } from '@/lib/database';
-import { Service } from '@/lib/types';
+import { Service, ServiceType } from '@/lib/types';
 import { formatNairaFromKobo } from '@/lib/validations';
 import { responsiveClasses as rc, animationClasses as ac } from '@/lib/animations';
 import { Navbar } from '@/components/ui/navbar';
@@ -36,38 +36,39 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white overflow-hidden relative">
-        {/* Floating elements */}
+      {/* Hero Section - Enhanced */}
+      <section className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white overflow-hidden relative min-h-[90vh] flex items-center">
+        {/* Enhanced floating elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full animate-float"></div>
-          <div className="absolute top-40 right-20 w-20 h-20 bg-purple-300/20 rounded-full animate-float animation-delay-2000"></div>
-          <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-blue-300/20 rounded-full animate-float animation-delay-4000"></div>
+          <div className="absolute top-20 left-10 w-24 h-24 md:w-32 md:h-32 bg-white/10 rounded-full animate-float"></div>
+          <div className="absolute top-40 right-20 w-16 h-16 md:w-20 md:h-20 bg-purple-300/20 rounded-full animate-float animation-delay-2000"></div>
+          <div className="absolute bottom-20 left-1/4 w-12 h-12 md:w-16 md:h-16 bg-blue-300/20 rounded-full animate-float animation-delay-4000"></div>
+          <div className="absolute top-1/2 right-10 w-8 h-8 md:w-12 md:h-12 bg-pink-300/15 rounded-full animate-float animation-delay-3000"></div>
         </div>
 
-        <div className={`${rc.container} py-16 sm:py-24 relative z-10`}>
+        <div className={`${rc.container} py-12 md:py-16 lg:py-24 relative z-10`}>
           <div className="text-center">
             <div className={`${ac.fadeIn}`} style={{ animationDelay: '0.2s' }}>
-              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight">
                 Lagos Premier 
                 <br />
                 <span className="bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent inline-block transform hover:scale-105 transition-transform duration-500">
                   Laundry Service
                 </span>
               </h1>
-              <p className="text-lg sm:text-xl lg:text-2xl text-blue-100 mb-8 max-w-4xl mx-auto leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-100 mb-6 md:mb-8 max-w-4xl mx-auto leading-relaxed px-4">
                 Professional laundry pickup and delivery service across Lagos State. 
                 Perfect for busy professionals, entrepreneurs, and modern families.
               </p>
             </div>
             
-            <div className={`flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center mb-12 ${ac.slideIn}`} style={{ animationDelay: '0.4s' }}>
+            <div className={`flex flex-col sm:flex-row gap-3 md:gap-4 lg:gap-6 justify-center items-center mb-8 md:mb-12 px-4 ${ac.slideIn}`} style={{ animationDelay: '0.4s' }}>
               <Link
                 href={isAuthenticated ? "/book" : "/register"}
-                className="group bg-white text-blue-600 hover:bg-gray-50 px-8 py-4 rounded-2xl text-lg font-bold transition-all duration-300 hover:scale-105 w-full sm:w-auto relative overflow-hidden shadow-xl hover:shadow-2xl"
+                className="group bg-white text-blue-600 hover:bg-gray-50 px-6 md:px-8 py-3 md:py-4 rounded-2xl text-base md:text-lg font-bold transition-all duration-300 hover:scale-105 w-full sm:w-auto relative overflow-hidden shadow-xl hover:shadow-2xl"
               >
                 <span className="relative z-10 flex items-center justify-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
                   Book Laundry Service
@@ -76,10 +77,10 @@ export default function HomePage() {
               </Link>
               <Link
                 href="/services"
-                className="group border-2 border-white/80 text-white hover:bg-white hover:text-blue-600 px-8 py-4 rounded-2xl text-lg font-bold transition-all duration-300 hover:scale-105 w-full sm:w-auto backdrop-blur-sm"
+                className="group border-2 border-white/80 text-white hover:bg-white hover:text-blue-600 px-6 md:px-8 py-3 md:py-4 rounded-2xl text-base md:text-lg font-bold transition-all duration-300 hover:scale-105 w-full sm:w-auto backdrop-blur-sm"
               >
                 <span className="flex items-center justify-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
                   View Services
@@ -87,14 +88,14 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Service Areas */}
-            <div className={`text-center ${ac.fadeIn}`} style={{ animationDelay: '0.6s' }}>
-              <p className="text-blue-200 mb-6 text-lg font-medium">🌍 Serving Lagos Areas:</p>
-              <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
+            {/* Enhanced Service Areas */}
+            <div className={`text-center px-4 ${ac.fadeIn}`} style={{ animationDelay: '0.6s' }}>
+              <p className="text-blue-200 mb-4 md:mb-6 text-base md:text-lg font-medium">🌍 Serving Lagos Areas:</p>
+              <div className="flex flex-wrap justify-center gap-2 md:gap-3 max-w-4xl mx-auto">
                 {['Lagos Island', 'Victoria Island', 'Ikoyi', 'Lekki', 'Ikeja', 'Surulere', 'Yaba', 'Gbagada'].map((area, index) => (
                   <span
                     key={area}
-                    className={`bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium transform hover:scale-110 transition-all duration-300 hover:bg-white/30 border border-white/20 ${ac.fadeIn}`}
+                    className={`bg-white/20 backdrop-blur-sm text-white px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transform hover:scale-110 transition-all duration-300 hover:bg-white/30 border border-white/20 ${ac.fadeIn}`}
                     style={{ animationDelay: `${0.6 + (index * 0.1)}s` }}
                   >
                     {area}
@@ -103,52 +104,52 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Trust indicators */}
-            <div className={`flex flex-wrap justify-center items-center gap-6 md:gap-8 mt-12 ${ac.fadeIn}`} style={{ animationDelay: '0.8s' }}>
+            {/* Enhanced Trust indicators */}
+            <div className={`flex flex-wrap justify-center items-center gap-4 md:gap-6 lg:gap-8 mt-8 md:mt-12 px-4 ${ac.fadeIn}`} style={{ animationDelay: '0.8s' }}>
               <div className="flex items-center text-blue-200">
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-sm font-medium">1000+ Happy Customers</span>
+                <span className="text-xs md:text-sm font-medium">1000+ Happy Customers</span>
               </div>
               <div className="flex items-center text-blue-200">
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-sm font-medium">Same Day Service</span>
+                <span className="text-xs md:text-sm font-medium">Same Day Service</span>
               </div>
               <div className="flex items-center text-blue-200">
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-sm font-medium">Eco-Friendly</span>
+                <span className="text-xs md:text-sm font-medium">Eco-Friendly</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 md:py-20 bg-white relative overflow-hidden">
+      {/* Enhanced Features Section */}
+      <section className="py-12 md:py-16 lg:py-20 bg-white relative overflow-hidden">
         <div className={rc.container}>
-          <div className={`text-center mb-16 ${ac.fadeIn}`}>
-            <div className="inline-flex items-center bg-blue-100 text-blue-600 px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <div className={`text-center mb-12 md:mb-16 ${ac.fadeIn}`}>
+            <div className="inline-flex items-center bg-blue-100 text-blue-600 px-3 md:px-4 py-2 rounded-full text-sm font-medium mb-4 md:mb-6">
+              <svg className="w-3 h-3 md:w-4 md:h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
               Why Choose Us
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 md:mb-6 px-4">
               Lagos' Most Trusted 
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Laundry Service</span>
+              <span className="block md:inline bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Laundry Service</span>
             </h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
               We understand the fast-paced lifestyle in Lagos. That's why we've designed our service 
               to be as convenient, reliable, and professional as possible.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-12">
             {[
               {
                 icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z",
@@ -174,11 +175,11 @@ export default function HomePage() {
             ].map((feature, index) => (
               <div 
                 key={feature.title} 
-                className={`text-center transform hover:scale-105 transition-all duration-300 bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl border border-gray-100 ${ac.slideIn}`}
+                className={`text-center transform hover:scale-105 transition-all duration-300 bg-white rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-lg hover:shadow-xl border border-gray-100 ${ac.slideIn}`}
                 style={{ animationDelay: `${0.2 + (index * 0.2)}s` }}
               >
-                <div className={`bg-gradient-to-r ${feature.bgGradient} rounded-2xl p-6 w-20 h-20 mx-auto mb-6 flex items-center justify-center group hover:scale-110 transition-all duration-300 shadow-lg`}>
-                  <svg className={`w-8 h-8 bg-gradient-to-r ${feature.gradient} bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300`} fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ stroke: `url(#gradient-${index})` }}>
+                <div className={`bg-gradient-to-r ${feature.bgGradient} rounded-xl md:rounded-2xl p-4 md:p-6 w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 flex items-center justify-center group hover:scale-110 transition-all duration-300 shadow-lg`}>
+                  <svg className={`w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r ${feature.gradient} bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300`} fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ stroke: `url(#gradient-${index})` }}>
                     <defs>
                       <linearGradient id={`gradient-${index}`} x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stopColor={feature.gradient.includes('blue') ? '#3b82f6' : feature.gradient.includes('emerald') ? '#10b981' : '#8b5cf6'} />
@@ -188,8 +189,8 @@ export default function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={feature.icon} />
                   </svg>
                 </div>
-                <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4">{feature.title}</h3>
-                <p className="text-gray-600 leading-relaxed text-base lg:text-lg">
+                <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-3 md:mb-4">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed text-sm md:text-base lg:text-lg">
                   {feature.description}
                 </p>
               </div>
@@ -199,85 +200,85 @@ export default function HomePage() {
 
         {/* Background decoration */}
         <div className="absolute inset-0 bg-gradient-to-b from-blue-50/30 to-transparent pointer-events-none"></div>
-        <div className="absolute top-10 right-10 w-32 h-32 bg-blue-100/50 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 left-10 w-40 h-40 bg-purple-100/50 rounded-full blur-3xl"></div>
+        <div className="absolute top-10 right-10 w-24 h-24 md:w-32 md:h-32 bg-blue-100/50 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 left-10 w-32 h-32 md:w-40 md:h-40 bg-purple-100/50 rounded-full blur-3xl"></div>
       </section>
 
-      {/* Featured Services */}
-      <section className="py-16 md:py-20 bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20 relative">
+      {/* Enhanced Featured Services */}
+      <section className="py-12 md:py-16 lg:py-20 bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20 relative">
         <div className={rc.container}>
-          <div className={`text-center mb-16 ${ac.fadeIn}`}>
-            <div className="inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-600 px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className={`text-center mb-12 md:mb-16 ${ac.fadeIn}`}>
+            <div className="inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-600 px-3 md:px-4 py-2 rounded-full text-sm font-medium mb-4 md:mb-6">
+              <svg className="w-3 h-3 md:w-4 md:h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
               Our Services
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 md:mb-6 px-4">
               Professional Laundry Services
               <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Tailored for Lagos</span>
             </h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
               From everyday essentials to delicate garments, we provide comprehensive laundry solutions 
               that fit your busy lifestyle.
             </p>
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className={`bg-white rounded-3xl shadow-lg p-8 animate-pulse ${ac.fadeIn}`} style={{ animationDelay: `${i * 0.2}s` }}>
-                  <div className="h-6 bg-gray-200 rounded-lg mb-4"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-3"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-6"></div>
+                <div key={i} className={`bg-white rounded-2xl md:rounded-3xl shadow-lg p-6 md:p-8 animate-pulse ${ac.fadeIn}`} style={{ animationDelay: `${i * 0.2}s` }}>
+                  <div className="h-5 md:h-6 bg-gray-200 rounded-lg mb-3 md:mb-4"></div>
+                  <div className="h-3 md:h-4 bg-gray-200 rounded mb-2 md:mb-3"></div>
+                  <div className="h-3 md:h-4 bg-gray-200 rounded mb-4 md:mb-6"></div>
                   <div className="flex items-center justify-between">
-                    <div className="h-8 bg-gray-200 rounded w-24"></div>
-                    <div className="h-6 bg-gray-200 rounded w-20"></div>
+                    <div className="h-6 md:h-8 bg-gray-200 rounded w-20 md:w-24"></div>
+                    <div className="h-4 md:h-6 bg-gray-200 rounded w-16 md:w-20"></div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-12">
               {featuredServices.map((service, index) => (
                 <div 
                   key={service.$id} 
-                  className={`bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 p-8 transform hover:scale-105 hover:-translate-y-2 border border-gray-100 group ${ac.slideIn}`}
+                  className={`bg-white rounded-2xl md:rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 p-6 md:p-8 transform hover:scale-105 hover:-translate-y-2 border border-gray-100 group ${ac.slideIn}`}
                   style={{ animationDelay: `${0.2 + (index * 0.2)}s` }}
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-2xl">
-                        {service.type === 'wash_and_fold' ? '🧺' : 
-                         service.type === 'dry_cleaning' ? '👔' : 
-                         service.type === 'ironing' ? '👕' : '🧽'}
+                  <div className="flex items-center justify-between mb-3 md:mb-4">
+                    <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl md:rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-xl md:text-2xl">
+                        {service.type === ServiceType.WASH_AND_FOLD ? '🧺' : 
+                         service.type === ServiceType.DRY_CLEANING ? '👔' : 
+                         service.type === ServiceType.IRONING ? '👕' : '🧽'}
                       </span>
                     </div>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-600 capitalize">
+                    <span className="inline-flex items-center px-2 md:px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-600 capitalize">
                       {service.type.replace('_', ' ')}
                     </span>
                   </div>
                   
-                  <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">
+                  <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3 group-hover:text-blue-600 transition-colors duration-300">
                     {service.name}
                   </h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
+                  <p className="text-gray-600 mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
                     {service.description}
                   </p>
                   
-                  <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-4 mb-6">
+                  <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl md:rounded-2xl p-3 md:p-4 mb-4 md:mb-6">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700">Starting from</span>
-                      <span className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                      <span className="text-xs md:text-sm font-medium text-gray-700">Starting from</span>
+                      <span className="text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                         {formatNairaFromKobo(service.basePrice)}
-                        {service.pricePerKg && <span className="text-sm text-gray-500 font-normal">/kg</span>}
+                        {service.pricePerKg && <span className="text-xs md:text-sm text-gray-500 font-normal">/kg</span>}
                       </span>
                     </div>
                   </div>
 
                   <Link
                     href={`/services?service=${service.$id}`}
-                    className="block w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-center py-3 px-6 rounded-2xl font-semibold transition-all duration-300 transform group-hover:scale-105"
+                    className="block w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-center py-2.5 md:py-3 px-4 md:px-6 rounded-xl md:rounded-2xl font-semibold transition-all duration-300 transform group-hover:scale-105 text-sm md:text-base"
                   >
                     Learn More
                   </Link>
@@ -286,16 +287,16 @@ export default function HomePage() {
             </div>
           )}
 
-          <div className={`text-center mt-12 ${ac.fadeIn}`} style={{ animationDelay: '0.8s' }}>
+          <div className={`text-center mt-8 md:mt-12 ${ac.fadeIn}`} style={{ animationDelay: '0.8s' }}>
             <Link
               href="/services"
-              className="inline-flex items-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 rounded-2xl text-lg font-bold transition-all duration-300 hover:scale-105 transform shadow-xl hover:shadow-2xl"
+              className="inline-flex items-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl md:rounded-2xl text-base md:text-lg font-bold transition-all duration-300 hover:scale-105 transform shadow-xl hover:shadow-2xl"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
               View All Services
-              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 md:w-5 md:h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </Link>
@@ -304,31 +305,31 @@ export default function HomePage() {
 
         {/* Background decoration */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/30 via-indigo-100/20 to-transparent pointer-events-none"></div>
-        <div className="absolute top-20 right-20 w-40 h-40 bg-gradient-to-r from-blue-200/30 to-purple-200/30 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 left-20 w-32 h-32 bg-gradient-to-r from-indigo-200/30 to-pink-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 right-20 w-32 h-32 md:w-40 md:h-40 bg-gradient-to-r from-blue-200/30 to-purple-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-20 w-24 h-24 md:w-32 md:h-32 bg-gradient-to-r from-indigo-200/30 to-pink-200/30 rounded-full blur-3xl"></div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-16 md:py-20 bg-white relative overflow-hidden">
+      {/* Enhanced How It Works */}
+      <section className="py-12 md:py-16 lg:py-20 bg-white relative overflow-hidden">
         <div className={rc.container}>
-          <div className={`text-center mb-16 ${ac.fadeIn}`}>
-            <div className="inline-flex items-center bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-600 px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className={`text-center mb-12 md:mb-16 ${ac.fadeIn}`}>
+            <div className="inline-flex items-center bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-600 px-3 md:px-4 py-2 rounded-full text-sm font-medium mb-4 md:mb-6">
+              <svg className="w-3 h-3 md:w-4 md:h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
               How It Works
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 md:mb-6 px-4">
               Simple Steps to 
               <span className="block bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">Clean Clothes</span>
             </h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
               Getting your laundry done professionally has never been easier. 
               Just follow these simple steps and let us handle the rest.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-12">
             {[
               {
                 number: 1,
@@ -368,20 +369,20 @@ export default function HomePage() {
                 className={`text-center group ${ac.slideIn}`}
                 style={{ animationDelay: `${0.2 + (index * 0.2)}s` }}
               >
-                <div className="relative mb-6">
-                  <div className={`bg-gradient-to-r ${step.bgGradient} rounded-3xl p-6 w-20 h-20 mx-auto flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl`}>
-                    <svg className={`w-8 h-8 text-${step.gradient.split('-')[1]}-600`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="relative mb-4 md:mb-6">
+                  <div className={`bg-gradient-to-r ${step.bgGradient} rounded-2xl md:rounded-3xl p-4 md:p-6 w-16 h-16 md:w-20 md:h-20 mx-auto flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl`}>
+                    <svg className={`w-6 h-6 md:w-8 md:h-8 text-${step.gradient.split('-')[1]}-600`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={step.icon} />
                     </svg>
                   </div>
-                  <div className={`absolute -bottom-2 -right-2 bg-gradient-to-r ${step.gradient} text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm shadow-lg`}>
+                  <div className={`absolute -bottom-1 md:-bottom-2 -right-1 md:-right-2 bg-gradient-to-r ${step.gradient} text-white rounded-full w-6 h-6 md:w-8 md:h-8 flex items-center justify-center font-bold text-xs md:text-sm shadow-lg`}>
                     {step.number}
                   </div>
                 </div>
-                <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">
+                <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-2 md:mb-3 group-hover:text-blue-600 transition-colors duration-300">
                   {step.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-gray-600 leading-relaxed text-sm md:text-base">
                   {step.description}
                 </p>
               </div>
@@ -390,31 +391,31 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 md:py-20 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white relative overflow-hidden">
+      {/* Enhanced CTA Section */}
+      <section className="py-12 md:py-16 lg:py-20 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 bg-white/5 opacity-20"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <div className={`${ac.fadeIn}`}>
-            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-6 leading-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">
               Ready to Experience
               <span className="block bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">
                 Lagos' Best Laundry Service?
               </span>
             </h2>
-            <p className="text-lg sm:text-xl lg:text-2xl text-blue-100 mb-12 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-100 mb-8 md:mb-12 max-w-4xl mx-auto leading-relaxed">
               Join thousands of satisfied customers across Lagos State. Book your first pickup today 
               and discover why we're the preferred choice for busy professionals and families.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 lg:gap-6 justify-center items-center">
               <Link
                 href={isAuthenticated ? "/book" : "/register"}
-                className="group bg-white text-blue-600 hover:bg-gray-50 px-8 py-4 rounded-2xl text-lg font-bold transition-all duration-300 hover:scale-105 w-full sm:w-auto relative overflow-hidden shadow-xl hover:shadow-2xl"
+                className="group bg-white text-blue-600 hover:bg-gray-50 px-6 md:px-8 py-3 md:py-4 rounded-2xl text-base md:text-lg font-bold transition-all duration-300 hover:scale-105 w-full sm:w-auto relative overflow-hidden shadow-xl hover:shadow-2xl"
               >
                 <span className="relative z-10 flex items-center justify-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
                   {isAuthenticated ? "Book Now" : "Get Started Today"}
@@ -424,10 +425,10 @@ export default function HomePage() {
               
               <Link
                 href="/services"
-                className="group border-2 border-white/80 text-white hover:bg-white hover:text-blue-600 px-8 py-4 rounded-2xl text-lg font-bold transition-all duration-300 hover:scale-105 w-full sm:w-auto backdrop-blur-sm"
+                className="group border-2 border-white/80 text-white hover:bg-white hover:text-blue-600 px-6 md:px-8 py-3 md:py-4 rounded-2xl text-base md:text-lg font-bold transition-all duration-300 hover:scale-105 w-full sm:w-auto backdrop-blur-sm"
               >
                 <span className="flex items-center justify-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
@@ -436,50 +437,50 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Trust badges */}
-            <div className="flex flex-wrap justify-center items-center gap-8 mt-12 opacity-80">
+            {/* Enhanced Trust badges */}
+            <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 lg:gap-8 mt-8 md:mt-12 opacity-80">
               <div className="flex items-center text-blue-200">
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-sm font-medium">Trusted by 1000+ Customers</span>
+                <span className="text-xs md:text-sm font-medium">Trusted by 1000+ Customers</span>
               </div>
               <div className="flex items-center text-blue-200">
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-sm font-medium">100% Satisfaction Guarantee</span>
+                <span className="text-xs md:text-sm font-medium">100% Satisfaction Guarantee</span>
               </div>
               <div className="flex items-center text-blue-200">
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-sm font-medium">Free Pickup & Delivery</span>
+                <span className="text-xs md:text-sm font-medium">Free Pickup & Delivery</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      {/* Enhanced Footer */}
+      <footer className="bg-gray-900 text-white py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-xl font-bold mb-4">Gab'z Laundromat</h3>
-              <p className="text-gray-400 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            <div className="sm:col-span-2 md:col-span-1">
+              <h3 className="text-lg md:text-xl font-bold mb-3 md:mb-4">Gab'z Laundromat</h3>
+              <p className="text-gray-400 mb-3 md:mb-4 text-sm md:text-base">
                 Lagos Premier Laundry Service providing convenient pickup and delivery 
                 across Lagos State.
               </p>
-              <p className="text-gray-400">
+              <p className="text-gray-400 text-sm md:text-base">
                 📞 +234 800 000 0000<br />
                 📧 hello@gabzlaundromat.com
               </p>
             </div>
 
             <div>
-              <h4 className="text-lg font-semibold mb-4">Services</h4>
-              <ul className="space-y-2 text-gray-400">
+              <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Services</h4>
+              <ul className="space-y-1.5 md:space-y-2 text-gray-400 text-sm md:text-base">
                 <li>Wash & Fold</li>
                 <li>Dry Cleaning</li>
                 <li>Ironing Service</li>
@@ -488,8 +489,8 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h4 className="text-lg font-semibold mb-4">Service Areas</h4>
-              <ul className="space-y-2 text-gray-400">
+              <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Service Areas</h4>
+              <ul className="space-y-1.5 md:space-y-2 text-gray-400 text-sm md:text-base">
                 <li>Lagos Island</li>
                 <li>Victoria Island</li>
                 <li>Ikoyi</li>
@@ -500,17 +501,17 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/about" className="hover:text-white">About Us</Link></li>
-                <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
-                <li><Link href="/faq" className="hover:text-white">FAQ</Link></li>
-                <li><Link href="/terms" className="hover:text-white">Terms of Service</Link></li>
+              <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Quick Links</h4>
+              <ul className="space-y-1.5 md:space-y-2 text-gray-400 text-sm md:text-base">
+                <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
+                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+                <li><Link href="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
+                <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+          <div className="border-t border-gray-800 mt-6 md:mt-8 pt-6 md:pt-8 text-center text-gray-400 text-sm md:text-base">
             <p>&copy; 2024 Gab'z Laundromat. All rights reserved. | Lagos State, Nigeria</p>
           </div>
         </div>
