@@ -231,30 +231,76 @@ export default function OwnerDashboard() {
 
   const loadOrdersData = async () => {
     try {
-      // Load recent orders
-      const pendingResponse = await databaseService.getOrdersByStatus(OrderStatus.PENDING, 10);
-      if (pendingResponse.success && pendingResponse.data) {
-        setRecentOrders(pendingResponse.data);
-      }
+      console.log('🔄 Loading orders data for owner dashboard...');
       
-      // Load order statistics
-      const [
-        allPendingResponse,
-        inProgressResponse,
-        completedResponse
-      ] = await Promise.all([
-        databaseService.getOrdersByStatus(OrderStatus.PENDING),
-        databaseService.getOrdersByStatus(OrderStatus.IN_PROGRESS),
-        databaseService.getOrdersByStatus(OrderStatus.DELIVERED)
+      // First, try to get just pending orders to test the connection
+      console.log('🧪 Testing database connection with pending orders...');
+      const testResponse = await databaseService.getOrdersByStatus(OrderStatus.PENDING, 5);
+      console.log('🧪 Test response:', {
+        success: testResponse.success,
+        dataLength: testResponse.data?.length || 0,
+        error: testResponse.error || 'none'
+      });
+      
+      // Load recent orders (all statuses, sorted by creation date)
+      const allOrdersResponse = await Promise.all([
+        databaseService.getOrdersByStatus(OrderStatus.PENDING, 100),
+        databaseService.getOrdersByStatus(OrderStatus.PICKED_UP, 100),
+        databaseService.getOrdersByStatus(OrderStatus.CONFIRMED, 100),
+        databaseService.getOrdersByStatus(OrderStatus.IN_PROGRESS, 100),
+        databaseService.getOrdersByStatus(OrderStatus.READY, 100),
+        databaseService.getOrdersByStatus(OrderStatus.DELIVERED, 100),
+        databaseService.getOrdersByStatus(OrderStatus.CANCELLED, 100)
       ]);
+
+      // Combine all orders and sort by creation date (most recent first)
+      const allOrders: Order[] = [];
+      allOrdersResponse.forEach((response, index) => {
+        const statusNames = ['PENDING', 'PICKED_UP', 'CONFIRMED', 'IN_PROGRESS', 'READY', 'DELIVERED', 'CANCELLED'];
+        console.log(`📋 ${statusNames[index]} orders:`, response.success ? response.data?.length || 0 : 'Error');
+        
+        if (response.success && response.data) {
+          allOrders.push(...response.data);
+        }
+      });
+
+      // Sort by creation date and take the 10 most recent
+      const sortedOrders = allOrders.sort((a, b) => 
+        new Date(b.$createdAt).getTime() - new Date(a.$createdAt).getTime()
+      );
       
-      const pendingCount = allPendingResponse.data?.length || 0;
-      const inProgressCount = inProgressResponse.data?.length || 0;
-      const completedCount = completedResponse.data?.length || 0;
-      const totalOrders = pendingCount + inProgressCount + completedCount;
+      console.log('📊 Owner Dashboard - Orders loaded:', {
+        totalOrders: allOrders.length,
+        recentOrders: sortedOrders.slice(0, 10).length,
+        orderStatuses: {
+          pending: allOrders.filter(o => o.status === OrderStatus.PENDING).length,
+          inProgress: allOrders.filter(o => o.status === OrderStatus.IN_PROGRESS).length,
+          ready: allOrders.filter(o => o.status === OrderStatus.READY).length,
+          delivered: allOrders.filter(o => o.status === OrderStatus.DELIVERED).length,
+        },
+        mostRecentOrder: sortedOrders[0] ? {
+          orderNumber: sortedOrders[0].orderNumber,
+          status: sortedOrders[0].status,
+          createdAt: sortedOrders[0].$createdAt
+        } : null
+      });
+      
+      setRecentOrders(sortedOrders.slice(0, 10));
+      
+      // Load order statistics (reuse the data we already fetched)
+      const pendingOrders = allOrders.filter(order => order.status === OrderStatus.PENDING);
+      const inProgressOrders = allOrders.filter(order => order.status === OrderStatus.IN_PROGRESS);
+      const readyOrders = allOrders.filter(order => order.status === OrderStatus.READY);
+      const deliveredOrders = allOrders.filter(order => order.status === OrderStatus.DELIVERED);
+      const cancelledOrders = allOrders.filter(order => order.status === OrderStatus.CANCELLED);
+      
+      const pendingCount = pendingOrders.length;
+      const inProgressCount = inProgressOrders.length;
+      const completedCount = deliveredOrders.length;
+      const totalOrders = allOrders.length;
       
       // Calculate total revenue from completed orders
-      const totalRevenue = completedResponse.data?.reduce((sum, order) => sum + order.finalAmount, 0) || 0;
+      const totalRevenue = deliveredOrders.reduce((sum, order) => sum + order.finalAmount, 0);
       
       // Calculate average order value
       const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
@@ -262,9 +308,9 @@ export default function OwnerDashboard() {
       // Calculate monthly revenue (last 30 days)
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      const monthlyRevenue = completedResponse.data?.filter(order => 
+      const monthlyRevenue = deliveredOrders.filter(order => 
         new Date(order.$createdAt) > thirtyDaysAgo
-      ).reduce((sum, order) => sum + order.finalAmount, 0) || 0;
+      ).reduce((sum, order) => sum + order.finalAmount, 0);
       
       setStats(prev => ({
         ...prev,
@@ -277,7 +323,18 @@ export default function OwnerDashboard() {
       }));
       
     } catch (error) {
-      console.error('Failed to load orders:', error);
+      console.error('❌ Failed to load orders:', error);
+      // Set empty arrays as fallback
+      setRecentOrders([]);
+      setStats(prev => ({
+        ...prev,
+        totalOrders: 0,
+        pendingOrders: 0,
+        completedOrders: 0,
+        totalRevenue: 0,
+        monthlyRevenue: 0,
+        averageOrderValue: 0
+      }));
     }
   };
 
