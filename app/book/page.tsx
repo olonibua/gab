@@ -447,12 +447,12 @@ function BookPageContent() {
                                    service.type === 'ironing' ? '👕' : '🧽'}
                                 </span>
                               </div>
-                              <div>
+                          <div>
                                 <h3 className="text-2xl font-bold text-gray-900">{service.name}</h3>
                                 <span className="inline-flex items-center px-3 py-1 text-sm font-medium bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 rounded-full capitalize">
-                                  {service.type.replace('_', ' ')}
-                                </span>
-                              </div>
+                              {service.type.replace('_', ' ')}
+                            </span>
+                          </div>
                             </div>
                           </div>
                           <div className="text-right ml-4">
@@ -483,10 +483,10 @@ function BookPageContent() {
 
                         {/* Desktop Info */}
                         <div className="hidden md:block bg-gray-50 rounded-xl p-4 mb-6">
-                          <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between">
                             <span className="text-sm font-medium text-gray-700">
                               ⏱️ Duration: {service.estimatedDuration} hours
-                            </span>
+                          </span>
                             <span className="text-sm font-medium text-gray-700">
                               📍 Available in Lagos
                             </span>
@@ -501,33 +501,33 @@ function BookPageContent() {
                               <div className="block md:hidden">
                                 <div className="flex items-center justify-between mb-3">
                                   <span className="text-sm font-bold text-green-600">✓ Selected</span>
-                                  <div className="flex items-center space-x-2">
-                                    <button
-                                      onClick={() => {
-                                        const selection = selectedServices.find(s => s.serviceId === service.$id);
-                                        if (selection) {
-                                          updateServiceQuantity(service.$id, selection.quantity - 1);
-                                        }
-                                      }}
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() => {
+                                  const selection = selectedServices.find(s => s.serviceId === service.$id);
+                                  if (selection) {
+                                    updateServiceQuantity(service.$id, selection.quantity - 1);
+                                  }
+                                }}
                                       className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-bold text-sm"
-                                    >
-                                      -
-                                    </button>
+                              >
+                                -
+                              </button>
                                     <span className="text-lg font-bold text-gray-900 min-w-[2rem] text-center">
-                                      {selectedServices.find(s => s.serviceId === service.$id)?.quantity || 0}
-                                    </span>
-                                    <button
-                                      onClick={() => {
-                                        const selection = selectedServices.find(s => s.serviceId === service.$id);
-                                        if (selection) {
-                                          updateServiceQuantity(service.$id, selection.quantity + 1);
-                                        }
-                                      }}
+                                {selectedServices.find(s => s.serviceId === service.$id)?.quantity || 0}
+                              </span>
+                              <button
+                                onClick={() => {
+                                  const selection = selectedServices.find(s => s.serviceId === service.$id);
+                                  if (selection) {
+                                    updateServiceQuantity(service.$id, selection.quantity + 1);
+                                  }
+                                }}
                                       className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-bold text-sm"
-                                    >
-                                      +
-                                    </button>
-                                  </div>
+                              >
+                                +
+                              </button>
+                            </div>
                                 </div>
                               </div>
 

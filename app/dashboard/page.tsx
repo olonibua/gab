@@ -77,8 +77,8 @@ function DashboardContent() {
 
       // Fallback: Try to load user stats from database if available
       try {
-        const statsResponse = await databaseService.getUserStats(user.$id);
-        if (statsResponse.success && statsResponse.data) {
+      const statsResponse = await databaseService.getUserStats(user.$id);
+      if (statsResponse.success && statsResponse.data) {
           const dbStats = statsResponse.data;
           // Use database stats if they exist and are more comprehensive
           setStats(prev => ({
@@ -159,9 +159,9 @@ function DashboardContent() {
                 <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                   <span className="text-2xl">🎉</span>
                 </div>
-                <div>
+              <div>
                   <h2 className="text-lg font-semibold">Welcome to Gab'z Laundromat, {user.name || 'User'}!</h2>
-                  <p className="text-blue-100">Your account is ready. Book your first laundry service today!</p>
+                <p className="text-blue-100">Your account is ready. Book your first laundry service today!</p>
                 </div>
               </div>
               <button
@@ -247,7 +247,7 @@ function DashboardContent() {
               <div className="flex items-center justify-between mb-3">
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${stat.bgGradient} flex items-center justify-center text-2xl`}>
                   {stat.icon}
-                </div>
+              </div>
                 <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${stat.gradient}`}></div>
               </div>
               <div>
@@ -415,7 +415,7 @@ function DashboardContent() {
 
                     {/* Desktop Layout */}
                     <div className="hidden md:flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-4">
                         <div className="w-14 h-14 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-300">
                         {getStatusIcon(order.status)}
                       </div>

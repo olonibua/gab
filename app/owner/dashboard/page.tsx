@@ -7,7 +7,7 @@ import { databaseService } from '@/lib/database';
 import { User, AdminUser, Order, OrderStatus, Service, ServiceType, UserRole } from '@/lib/types';
 import { formatNairaFromKobo, convertNairaToKobo } from '@/lib/validations';
 import { authService } from '@/lib/auth';
-import { responsiveClasses as rc } from '@/lib/animations';
+import { responsiveClasses as rc, animationClasses as ac } from '@/lib/animations';
 import Link from 'next/link';
 import { Navbar } from '@/components/ui/navbar';
 
@@ -482,8 +482,29 @@ export default function OwnerDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20 flex items-center justify-center relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-32 h-32 bg-blue-200/20 rounded-full animate-float"></div>
+          <div className="absolute top-40 right-20 w-20 h-20 bg-indigo-200/20 rounded-full animate-float animation-delay-2000"></div>
+          <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-purple-200/20 rounded-full animate-float animation-delay-4000"></div>
+        </div>
+        
+        <div className="flex flex-col items-center space-y-6 relative z-10">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-indigo-200 rounded-full animate-spin"></div>
+            <div className="absolute top-0 left-0 w-16 h-16 border-4 border-indigo-600 rounded-full animate-spin border-t-transparent"></div>
+          </div>
+          <div className="text-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <span className="text-2xl text-white">👑</span>
+            </div>
+            <p className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+              Loading Dashboard
+            </p>
+            <p className="text-gray-600 font-medium">Preparing your business overview...</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -491,87 +512,114 @@ export default function OwnerDashboard() {
   const renderOverview = () => (
     <>
       {/* Stats Grid */}
-      <div className={`${rc.grid} mb-8`}>
-        <div className={`${rc.card} animate-slideIn`} style={{ animationDelay: '0.1s' }}>
-          <div className="flex items-center">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className={`grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-12`}>
+        <div className={`bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-4 md:p-6 border border-white/50 ${ac.fadeIn}`} style={{ animationDelay: '0.1s' }}>
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-              <p className="text-2xl font-bold text-gray-900">{formatNairaFromKobo(stats.totalRevenue)}</p>
-              <p className="text-sm text-gray-500">
-                {formatNairaFromKobo(stats.monthlyRevenue)} this month
-              </p>
-            </div>
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-600 mb-1">Total Revenue</p>
+            <p className="text-xl md:text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+              {formatNairaFromKobo(stats.totalRevenue)}
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              {formatNairaFromKobo(stats.monthlyRevenue)} this month
+            </p>
           </div>
         </div>
 
-        <div className={`${rc.card} animate-slideIn`} style={{ animationDelay: '0.2s' }}>
-          <div className="flex items-center">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className={`bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-4 md:p-6 border border-white/50 ${ac.fadeIn}`} style={{ animationDelay: '0.2s' }}>
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Orders</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.totalOrders}</p>
-              <p className="text-sm text-gray-500">
-                {((stats.completedOrders / stats.totalOrders) * 100).toFixed(1)}% completion rate
-              </p>
-            </div>
+            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-600 mb-1">Total Orders</p>
+            <p className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              {stats.totalOrders}
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              {((stats.completedOrders / stats.totalOrders) * 100 || 0).toFixed(1)}% completion rate
+            </p>
           </div>
         </div>
 
-        <div className={`${rc.card} animate-slideIn`} style={{ animationDelay: '0.3s' }}>
-          <div className="flex items-center">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className={`bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-4 md:p-6 border border-white/50 ${ac.fadeIn}`} style={{ animationDelay: '0.3s' }}>
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Staff Members</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.activeStaff}/{stats.totalStaff}</p>
-              <p className="text-sm text-gray-500">
-                Active team members
-              </p>
-            </div>
+            <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></div>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-600 mb-1">Staff Members</p>
+            <p className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
+              {stats.activeStaff}/{stats.totalStaff}
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              Active team members
+            </p>
           </div>
         </div>
 
-        <div className={`${rc.card} animate-slideIn`} style={{ animationDelay: '0.4s' }}>
-          <div className="flex items-center">
-            <div className="p-2 bg-yellow-100 rounded-lg">
-              <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className={`bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-4 md:p-6 border border-white/50 ${ac.fadeIn}`} style={{ animationDelay: '0.4s' }}>
+          <div className="flex items-center justify-between mb-3">
+            <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Active Customers</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.activeCustomers}</p>
-              <p className="text-sm text-gray-500">
-                In the last 30 days
-              </p>
-            </div>
+            <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-600 mb-1">Active Customers</p>
+            <p className="text-xl md:text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+              {stats.activeCustomers}
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              In the last 30 days
+            </p>
           </div>
         </div>
       </div>
 
       {/* Recent Orders */}
-      <div className={`${rc.card} mb-8 animate-fadeIn`}>
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Recent Orders</h2>
-          <Link href="/admin/orders" className="text-sm text-purple-600 hover:text-purple-800">
-            View all
-          </Link>
+      <div className={`bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-white/50 ${ac.fadeIn}`} style={{ animationDelay: '0.5s' }}>
+        <div className="px-6 py-5 border-b border-gray-100/50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Recent Orders</h2>
+                <p className="text-sm text-gray-600">Latest customer orders</p>
+              </div>
+            </div>
+            <Link href="/admin/orders" className="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-700 font-medium transition-colors bg-indigo-50 hover:bg-indigo-100 px-3 py-2 rounded-xl">
+              View all
+              <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead>
+          <table className="min-w-full divide-y divide-gray-200/50">
+            <thead className="bg-gray-50/50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Order #
@@ -587,7 +635,7 @@ export default function OwnerDashboard() {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white/50 divide-y divide-gray-200/50">
               {isLoading ? (
                 [...Array(3)].map((_, i) => (
                   <tr key={i} className="animate-pulse">
@@ -597,32 +645,57 @@ export default function OwnerDashboard() {
                     <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24"></div></td>
                   </tr>
                 ))
+              ) : recentOrders.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-8 text-center">
+                    <div className="flex flex-col items-center">
+                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                      </div>
+                      <p className="text-gray-500 font-medium">No recent orders</p>
+                      <p className="text-gray-400 text-sm">Orders will appear here once customers start booking</p>
+                    </div>
+                  </td>
+                </tr>
               ) : (
                 recentOrders.map((order, index) => (
                   <tr
                     key={order.$id}
-                    className="hover:bg-gray-50 transition-colors duration-200 animate-fadeIn"
-                    style={{ animationDelay: `${index * 0.1}s` }}
+                    className={`hover:bg-blue-50/50 transition-colors duration-200 ${ac.fadeIn}`}
+                    style={{ animationDelay: `${0.6 + (index * 0.1)}s` }}
                   >
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {order.orderNumber}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                          <span className="text-sm font-bold text-blue-600">#{order.orderNumber?.slice(-3)}</span>
+                        </div>
+                        <span className="text-sm font-medium text-gray-900">{order.orderNumber}</span>
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border ${
                         order.status === OrderStatus.DELIVERED
-                          ? 'bg-green-100 text-green-800'
+                          ? 'bg-green-100 text-green-800 border-green-200'
                           : order.status === OrderStatus.PENDING
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-blue-100 text-blue-800'
+                          ? 'bg-amber-100 text-amber-800 border-amber-200'
+                          : 'bg-blue-100 text-blue-800 border-blue-200'
                       }`}>
                         {order.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatNairaFromKobo(order.finalAmount)}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="text-sm font-bold text-gray-900">
+                        {formatNairaFromKobo(order.finalAmount)}
+                      </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(order.$createdAt).toLocaleDateString()}
+                      {new Date(order.$createdAt).toLocaleDateString('en-NG', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
                     </td>
                   </tr>
                 ))
@@ -635,19 +708,28 @@ export default function OwnerDashboard() {
   );
 
   const renderCustomers = () => (
-    <div className="bg-white shadow overflow-hidden sm:rounded-md">
-      <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
-        <div>
-          <h3 className="text-lg leading-6 font-medium text-gray-900">Customer Details</h3>
-          <p className="mt-1 max-w-2xl text-sm text-gray-500">Complete list of all customers and their activity</p>
-        </div>
-        <div className="flex space-x-2">
-          <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-            Active: {customers.filter(c => c.status === 'active').length}
-          </span>
-          <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">
-            Inactive: {customers.filter(c => c.status === 'inactive').length}
-          </span>
+    <div className={`bg-white/80 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-white/50 ${ac.fadeIn}`}>
+      <div className="px-6 py-5 border-b border-gray-100/50">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center space-x-3 mb-4 md:mb-0">
+            <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Customer Management</h3>
+              <p className="text-sm text-gray-600">Complete list of all customers and their activity</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium border border-green-200">
+              Active: {customers.filter(c => c.status === 'active').length}
+            </span>
+            <span className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-xs font-medium border border-gray-200">
+              Inactive: {customers.filter(c => c.status === 'inactive').length}
+            </span>
+          </div>
         </div>
       </div>
       <div className="overflow-x-auto">
@@ -1188,22 +1270,57 @@ export default function OwnerDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/20 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-blue-200/20 rounded-full animate-float"></div>
+        <div className="absolute top-40 right-20 w-20 h-20 bg-indigo-200/20 rounded-full animate-float animation-delay-2000"></div>
+        <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-purple-200/20 rounded-full animate-float animation-delay-4000"></div>
+        <div className="absolute top-1/2 right-10 w-12 h-12 bg-pink-200/15 rounded-full animate-float animation-delay-3000"></div>
+      </div>
+
       {/* Navigation */}
       <Navbar variant="owner" />
 
       {/* Main Content */}
-      <main className={`${rc.main}`}>
+      <main className={`${rc.main} relative z-10`}>
         <div className={rc.container}>
-          {/* Header */}
-          <div className="mb-8 animate-fadeIn">
-            <h1 className="text-2xl font-bold text-gray-900">Business Overview</h1>
-            <p className="text-gray-600">Welcome back, {user?.name}</p>
+          {/* Enhanced Header */}
+          <div className={`mb-8 md:mb-12 ${ac.fadeIn}`}>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div>
+                <div className="flex items-center space-x-3 mb-2">
+                  <div className="w-12 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <span className="text-2xl text-white">👑</span>
+                  </div>
+                  <div>
+                    <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                      Business Overview
+                    </h1>
+                    <p className="text-gray-600 font-medium">Welcome back, {user?.name || 'Owner'}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 md:mt-0">
+                <div className="flex items-center space-x-3">
+                  <div className="hidden md:flex items-center space-x-2 bg-white/80 backdrop-blur-sm rounded-xl px-4 py-2 shadow-sm">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm font-medium text-gray-700">System Online</span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-white/80 backdrop-blur-sm hover:bg-red-50 text-red-600 px-4 py-2 rounded-xl font-medium transition-all duration-200 shadow-sm hover:shadow-md border border-red-200/50"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Navigation Tabs */}
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+          {/* Enhanced Navigation Tabs */}
+          <div className={`bg-white/60 backdrop-blur-sm rounded-2xl p-2 mb-8 shadow-sm border border-white/50 ${ac.fadeIn}`} style={{ animationDelay: '0.3s' }}>
+            <nav className="flex space-x-2" aria-label="Tabs">
               {[
                 { id: 'overview', name: 'Overview', icon: '📊' },
                 { id: 'customers', name: 'Customers', icon: '👥' },
@@ -1215,12 +1332,15 @@ export default function OwnerDashboard() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`${
                     activeTab === tab.id
-                      ? 'border-indigo-500 text-indigo-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2`}
+                      ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
+                      : 'text-gray-600 hover:text-gray-800 hover:bg-white/50'
+                  } flex items-center space-x-2 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-300 transform hover:scale-105 relative overflow-hidden`}
                 >
-                  <span>{tab.icon}</span>
-                  <span>{tab.name}</span>
+                  <span className="text-lg">{tab.icon}</span>
+                  <span className="font-semibold">{tab.name}</span>
+                  {activeTab === tab.id && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-xl"></div>
+                  )}
                 </button>
               ))}
             </nav>

@@ -110,82 +110,82 @@ function OrderDetailsContent({ params }: OrderDetailsPageProps) {
             } catch (verificationError) {
               console.error('❌ Payment verification failed:', verificationError);
             }
-          } else {
-            console.log('⚠️ No payment reference found in URL for verification');
+                      } else {
+              console.log('⚠️ No payment reference found in URL for verification');
+            }
           }
+          
+          setOrder(orderData);
+          setOrderItems(items);
+        } else {
+          setError(response.error || 'Failed to load order details');
         }
-        
-        setOrder(orderData);
-        setOrderItems(items);
-      } else {
-        setError(response.error || 'Failed to load order details');
+      } catch (error) {
+        console.error('Error loading order:', error);
+        setError('An unexpected error occurred');
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error('Error loading order:', error);
-      setError('An unexpected error occurred');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
 
-  const manuallyVerifyPayment = async () => {
-    if (!order) return;
-    
-    setIsVerifyingPayment(true);
-    
-    try {
-      console.log('🔄 Manually verifying payment for order:', order.$id);
+    const manuallyVerifyPayment = async () => {
+      if (!order) return;
       
-      // Check if there's a payment reference in the URL
-      const reference = searchParams.get('reference') || searchParams.get('trxref');
+      setIsVerifyingPayment(true);
       
-      if (reference) {
-        const { paymentService } = await import('@/lib/payment');
-        const verificationResponse = await paymentService.verifyPayment(reference);
+      try {
+        console.log('🔄 Manually verifying payment for order:', order.$id);
         
-        if (verificationResponse.success && verificationResponse.data?.status === 'success') {
-          console.log('✅ Payment verified successfully');
+        // Check if there's a payment reference in the URL
+        const reference = searchParams.get('reference') || searchParams.get('trxref');
+        
+        if (reference) {
+          const { paymentService } = await import('@/lib/payment');
+          const verificationResponse = await paymentService.verifyPayment(reference);
           
-          // Update payment status
-          const paymentUpdateResponse = await databaseService.updateOrderPaymentStatus(
-            order.$id,
-            'paid' as any,
-            reference,
-            verificationResponse.data.amount || order.finalAmount
-          );
-          
-          if (paymentUpdateResponse.success) {
-            // Update order status to confirmed
-            await databaseService.updateOrderStatus(
+          if (verificationResponse.success && verificationResponse.data?.status === 'success') {
+            console.log('✅ Payment verified successfully');
+            
+            // Update payment status
+            const paymentUpdateResponse = await databaseService.updateOrderPaymentStatus(
               order.$id,
-              'confirmed' as any,
-              'system',
-              'Payment manually verified and confirmed'
+              'paid' as any,
+              reference,
+              verificationResponse.data.amount || order.finalAmount
             );
             
-            // Reload order data
-            loadOrderDetails(false);
-            alert('Payment verified successfully! Your order status has been updated.');
+            if (paymentUpdateResponse.success) {
+              // Update order status to confirmed
+              await databaseService.updateOrderStatus(
+                order.$id,
+                'confirmed' as any,
+                'system',
+                'Payment manually verified and confirmed'
+              );
+              
+              // Reload order data
+              loadOrderDetails(false);
+              alert('Payment verified successfully! Your order status has been updated.');
+            } else {
+              alert('Payment was verified but failed to update order status. Please contact support.');
+            }
           } else {
-            alert('Payment was verified but failed to update order status. Please contact support.');
+            alert('Payment verification failed. Please contact support with your order number.');
           }
         } else {
-          alert('Payment verification failed. Please contact support with your order number.');
+          // If no reference, just try to refresh the order data in case webhook updated it
+          await loadOrderDetails(false);
+          if (order.paymentStatus === 'pending') {
+            alert('No payment reference found. If you completed payment, please contact support with your order number and payment receipt.');
+          }
         }
-      } else {
-        // If no reference, just try to refresh the order data in case webhook updated it
-        await loadOrderDetails(false);
-        if (order.paymentStatus === 'pending') {
-          alert('No payment reference found. If you completed payment, please contact support with your order number and payment receipt.');
-        }
+      } catch (error) {
+        console.error('❌ Manual payment verification failed:', error);
+        alert('Failed to verify payment. Please contact support.');
+      } finally {
+        setIsVerifyingPayment(false);
       }
-    } catch (error) {
-      console.error('❌ Manual payment verification failed:', error);
-      alert('Failed to verify payment. Please contact support.');
-    } finally {
-      setIsVerifyingPayment(false);
-    }
-  };
+    };
 
   const getStatusColor = (status: OrderStatus) => {
     switch (status) {
@@ -267,15 +267,15 @@ function OrderDetailsContent({ params }: OrderDetailsPageProps) {
             </div>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Order Not Found</h1>
             <p className="text-gray-600 mb-8 text-lg">{error}</p>
-            <Link
-              href="/dashboard"
+          <Link
+            href="/dashboard"
               className="inline-flex items-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl"
-            >
+          >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
-              Back to Dashboard
-            </Link>
+            Back to Dashboard
+          </Link>
           </div>
         </div>
       </div>
@@ -327,20 +327,20 @@ function OrderDetailsContent({ params }: OrderDetailsPageProps) {
                 <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center text-white text-xl font-bold">
                   #
                 </div>
-                <div>
+            <div>
                   <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
                     Order #{order.orderNumber}
                   </h1>
                   <p className="text-gray-600 text-sm md:text-base">
                     {new Date(order.$createdAt).toLocaleDateString('en-NG', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </p>
-                </div>
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </p>
+            </div>
               </div>
             </div>
             
@@ -356,7 +356,7 @@ function OrderDetailsContent({ params }: OrderDetailsPageProps) {
               
               <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold capitalize border ${getPaymentStatusColor(order.paymentStatus)}`}>
                 💳 {order.paymentStatus}
-              </span>
+                </span>
             </div>
           </div>
         </div>
@@ -378,7 +378,7 @@ function OrderDetailsContent({ params }: OrderDetailsPageProps) {
               </div>
               
               <div className="p-6 md:p-8">
-                <div className="space-y-4">
+              <div className="space-y-4">
                   {orderItems.map((item, index) => (
                     <div 
                       key={item.$id} 
@@ -399,23 +399,23 @@ function OrderDetailsContent({ params }: OrderDetailsPageProps) {
                             </span>
                           )}
                         </div>
-                        {item.specialInstructions && (
+                      {item.specialInstructions && (
                           <p className="text-sm text-blue-600 mt-2 italic">
                             💡 {item.specialInstructions}
-                          </p>
-                        )}
-                      </div>
+                        </p>
+                      )}
+                    </div>
                       
                       <div className="text-left sm:text-right">
                         <p className="text-xl font-bold text-gray-900 mb-1">
-                          {formatNairaFromKobo(item.totalPrice)}
-                        </p>
+                        {formatNairaFromKobo(item.totalPrice)}
+                      </p>
                         <p className="text-sm text-gray-500">
-                          {formatNairaFromKobo(item.unitPrice)} each
-                        </p>
-                      </div>
+                        {formatNairaFromKobo(item.unitPrice)} each
+                      </p>
                     </div>
-                  ))}
+                  </div>
+                ))}
                 </div>
               </div>
             </div>
@@ -446,12 +446,12 @@ function OrderDetailsContent({ params }: OrderDetailsPageProps) {
                       <h3 className="font-semibold text-blue-900 text-lg">Pickup Address</h3>
                     </div>
                     <p className="text-blue-800 leading-relaxed">
-                      {order.pickupAddress ? (
-                        typeof order.pickupAddress === 'string' ? order.pickupAddress : 
-                        `${order.pickupAddress.street}, ${order.pickupAddress.area}, ${order.pickupAddress.lga}`
-                      ) : 'Not specified'}
-                    </p>
-                  </div>
+                    {order.pickupAddress ? (
+                      typeof order.pickupAddress === 'string' ? order.pickupAddress : 
+                      `${order.pickupAddress.street}, ${order.pickupAddress.area}, ${order.pickupAddress.lga}`
+                    ) : 'Not specified'}
+                  </p>
+                </div>
                   
                   <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-2xl p-6">
                     <div className="flex items-center space-x-3 mb-4">
@@ -463,11 +463,11 @@ function OrderDetailsContent({ params }: OrderDetailsPageProps) {
                       <h3 className="font-semibold text-green-900 text-lg">Delivery Address</h3>
                     </div>
                     <p className="text-green-800 leading-relaxed">
-                      {order.deliveryAddress ? (
-                        typeof order.deliveryAddress === 'string' ? order.deliveryAddress : 
-                        `${order.deliveryAddress.street}, ${order.deliveryAddress.area}, ${order.deliveryAddress.lga}`
-                      ) : 'Not specified'}
-                    </p>
+                    {order.deliveryAddress ? (
+                      typeof order.deliveryAddress === 'string' ? order.deliveryAddress : 
+                      `${order.deliveryAddress.street}, ${order.deliveryAddress.area}, ${order.deliveryAddress.lga}`
+                    ) : 'Not specified'}
+                  </p>
                   </div>
                 </div>
               </div>
@@ -488,51 +488,51 @@ function OrderDetailsContent({ params }: OrderDetailsPageProps) {
               
               <div className="p-6 md:p-8">
                 <div className="space-y-6">
-                  {(() => {
-                    try {
-                      const orderHistory = JSON.parse(order.orderHistory || '[]');
-                      return orderHistory.map((entry: any, index: number) => (
+                {(() => {
+                  try {
+                    const orderHistory = JSON.parse(order.orderHistory || '[]');
+                    return orderHistory.map((entry: any, index: number) => (
                         <div 
                           key={index} 
                           className={`flex items-start space-x-4 ${ac.fadeIn}`}
                           style={{ animationDelay: `${index * 0.1}s` }}
                         >
                           <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full flex items-center justify-center text-xl border-4 border-white shadow-lg">
-                            {getStatusIcon(entry.status)}
-                          </div>
+                          {getStatusIcon(entry.status)}
+                        </div>
                           <div className="flex-1 min-w-0">
                             <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-4">
                               <h3 className="font-semibold text-gray-900 capitalize text-lg mb-1">
-                                {entry.status.replace('_', ' ')}
+                            {entry.status.replace('_', ' ')}
                               </h3>
                               <p className="text-sm text-gray-600 mb-2">
-                                {new Date(entry.timestamp).toLocaleDateString('en-NG', {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit'
-                                })}
-                              </p>
-                              {entry.notes && (
+                            {new Date(entry.timestamp).toLocaleDateString('en-NG', {
+                              month: 'short',
+                              day: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </p>
+                          {entry.notes && (
                                 <p className="text-sm text-gray-700 italic">
                                   💬 {entry.notes}
                                 </p>
-                              )}
+                          )}
                             </div>
-                          </div>
                         </div>
-                      ));
-                    } catch (e) {
-                      return (
+                      </div>
+                    ));
+                  } catch (e) {
+                    return (
                         <div className="text-center py-8">
                           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <span className="text-2xl">📋</span>
                           </div>
                           <p className="text-gray-500">No order history available</p>
-                        </div>
-                      );
-                    }
-                  })()}
+                      </div>
+                    );
+                  }
+                })()}
                 </div>
               </div>
             </div>
@@ -569,18 +569,18 @@ function OrderDetailsContent({ params }: OrderDetailsPageProps) {
                         Discount
                       </span>
                       <span className="font-semibold">-{formatNairaFromKobo(order.discountAmount)}</span>
-                    </div>
-                  )}
+                  </div>
+                )}
                   
                   <div className="border-t pt-4">
                     <div className="flex justify-between items-center">
                       <span className="text-xl font-bold text-gray-900">Total</span>
                       <span className="text-2xl font-bold text-blue-600">{formatNairaFromKobo(order.finalAmount)}</span>
                     </div>
-                  </div>
                 </div>
+              </div>
 
-                {/* Payment Information */}
+              {/* Payment Information */}
                 <div className="mt-8 pt-6 border-t border-gray-100">
                   <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
                     <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -590,16 +590,16 @@ function OrderDetailsContent({ params }: OrderDetailsPageProps) {
                   </h3>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-600">Method</span>
+                    <span className="text-gray-600">Method</span>
                       <span className="font-medium capitalize bg-gray-100 px-3 py-1 rounded-full">
-                        {order.paymentMethod?.replace('_', ' ') || 'Not specified'}
-                      </span>
-                    </div>
+                      {order.paymentMethod?.replace('_', ' ') || 'Not specified'}
+                    </span>
+                  </div>
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-600">Status</span>
+                    <span className="text-gray-600">Status</span>
                       <span className={`font-semibold capitalize px-3 py-1 rounded-full text-xs border ${getPaymentStatusColor(order.paymentStatus)}`}>
-                        {order.paymentStatus}
-                      </span>
+                      {order.paymentStatus}
+                    </span>
                     </div>
                   </div>
                 </div>
@@ -608,18 +608,18 @@ function OrderDetailsContent({ params }: OrderDetailsPageProps) {
 
             {/* Action Buttons */}
             <div className={`space-y-4 ${ac.fadeIn}`} style={{ animationDelay: '0.5s' }}>
-              {/* Receipt Button */}
-              <Link
-                href={`/receipt/${order.$id}`}
+            {/* Receipt Button */}
+                <Link
+                  href={`/receipt/${order.$id}`}
                 className="block w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl text-center"
-              >
+                >
                 <div className="flex items-center justify-center">
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   View & Print Receipt
                 </div>
-              </Link>
+                </Link>
 
               {/* Back to Dashboard */}
               <Link
@@ -631,7 +631,7 @@ function OrderDetailsContent({ params }: OrderDetailsPageProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                   </svg>
                   Back to Dashboard
-                </div>
+              </div>
               </Link>
             </div>
 

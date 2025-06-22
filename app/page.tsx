@@ -50,16 +50,16 @@ export default function HomePage() {
           <div className="text-center">
             <div className={`${ac.fadeIn}`} style={{ animationDelay: '0.2s' }}>
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight">
-                Lagos Premier 
-                <br />
+              Lagos Premier 
+              <br />
                 <span className="bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent inline-block transform hover:scale-105 transition-transform duration-500">
                   Laundry Service
                 </span>
-              </h1>
+            </h1>
               <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-100 mb-6 md:mb-8 max-w-4xl mx-auto leading-relaxed px-4">
-                Professional laundry pickup and delivery service across Lagos State. 
+              Professional laundry pickup and delivery service across Lagos State. 
                 Perfect for busy professionals, entrepreneurs, and modern families.
-              </p>
+            </p>
             </div>
             
             <div className={`flex flex-col sm:flex-row gap-3 md:gap-4 lg:gap-6 justify-center items-center mb-8 md:mb-12 px-4 ${ac.slideIn}`} style={{ animationDelay: '0.4s' }}>
@@ -71,7 +71,7 @@ export default function HomePage() {
                   <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
-                  Book Laundry Service
+                Book Laundry Service
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-indigo-100 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
               </Link>
@@ -83,7 +83,7 @@ export default function HomePage() {
                   <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
-                  View Services
+                View Services
                 </span>
               </Link>
             </div>
@@ -187,8 +187,8 @@ export default function HomePage() {
                       </linearGradient>
                     </defs>
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={feature.icon} />
-                  </svg>
-                </div>
+                </svg>
+              </div>
                 <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 mb-3 md:mb-4">{feature.title}</h3>
                 <p className="text-gray-600 leading-relaxed text-sm md:text-base lg:text-lg">
                   {feature.description}
@@ -267,12 +267,12 @@ export default function HomePage() {
                   </p>
                   
                   <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl md:rounded-2xl p-3 md:p-4 mb-4 md:mb-6">
-                    <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between">
                       <span className="text-xs md:text-sm font-medium text-gray-700">Starting from</span>
                       <span className="text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                        {formatNairaFromKobo(service.basePrice)}
+                      {formatNairaFromKobo(service.basePrice)}
                         {service.pricePerKg && <span className="text-xs md:text-sm text-gray-500 font-normal">/kg</span>}
-                      </span>
+                    </span>
                     </div>
                   </div>
 
