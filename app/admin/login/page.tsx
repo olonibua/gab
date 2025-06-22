@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/context/AuthContext';
+import { PasswordInput } from '@/components/ui/password-input';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -25,7 +26,7 @@ export default function AdminLoginPage() {
       if (result.success) {
         router.push('/admin/dashboard');
       } else {
-        setError(result.error || 'Admin login failed');
+        setError(result.error || 'Login failed');
       }
     } catch (error) {
       setError('An unexpected error occurred');
@@ -84,24 +85,14 @@ export default function AdminLoginPage() {
               </div>
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter your password"
-                />
-              </div>
-            </div>
+            <PasswordInput
+              id="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              label="Password"
+              placeholder="Enter your password"
+            />
 
             <div>
               <button

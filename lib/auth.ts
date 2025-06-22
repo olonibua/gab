@@ -360,17 +360,49 @@ export class AuthService {
   // Get Admin Profile (from database)
   async getAdminProfile(userId: string): Promise<ApiResponse<AdminUser>> {
     try {
-      const adminProfile = await databases.getDocument(
+      const rawProfile = await databases.getDocument(
         appwriteConfig.databaseId,
         appwriteConfig.collections.adminUsers,
         userId
-      ) as AdminUser;
+      );
+
+      // Convert Appwrite format back to our AdminUser type
+      const adminProfile: AdminUser = {
+        $id: rawProfile.$id,
+        $collectionId: rawProfile.$collectionId,
+        $databaseId: rawProfile.$databaseId,
+        $createdAt: rawProfile.$createdAt,
+        $updatedAt: rawProfile.$updatedAt,
+        $permissions: rawProfile.$permissions,
+        email: rawProfile.email,
+        firstName: rawProfile.firstName,
+        lastName: rawProfile.lastName,
+        phone: {
+          number: rawProfile.phoneNumber || '',
+          isWhatsApp: rawProfile.isWhatsAppNumber || false
+        },
+        role: rawProfile.role,
+        isActive: rawProfile.isActive,
+        permissions: JSON.parse(rawProfile.permissions || '[]'),
+        assignedAreas: JSON.parse(rawProfile.assignedAreas || '[]'),
+        workingHours: {
+          start: rawProfile.workingHoursStart || '09:00',
+          end: rawProfile.workingHoursEnd || '17:00'
+        },
+        workingDays: JSON.parse(rawProfile.workingDays || '[]'),
+        employeeId: rawProfile.employeeId,
+        hireDate: rawProfile.hireDate,
+        lastLogin: rawProfile.lastLogin,
+        totalOrdersHandled: rawProfile.totalOrdersHandled || 0,
+        averageRating: rawProfile.averageRating
+      };
 
       return {
         success: true,
         data: adminProfile
       };
     } catch (error: any) {
+      console.error('Failed to fetch admin profile:', error);
       return {
         success: false,
         error: 'Failed to fetch admin profile'
@@ -399,7 +431,7 @@ export class AuthService {
     try {
       await account.createRecovery(
         email,
-        'http://localhost:3000/reset-password'
+        'https://gab-dun.vercel.app/reset-password'
       );
       return {
         success: true,
@@ -452,7 +484,7 @@ export class AuthService {
   // Send Email Verification
   async sendEmailVerification(): Promise<ApiResponse<null>> {
     try {
-      await account.createVerification('http://localhost:3000/verify-email');
+      await account.createVerification('https://gab-dun.vercel.app/verify-email');
       return {
         success: true,
         message: 'Verification email sent'
@@ -533,6 +565,109 @@ export class AuthService {
       return {
         success: false,
         error: 'Failed to delete session'
+      };
+    }
+  }
+
+  // Register Admin User (Staff Registration)
+  async registerAdmin(adminData: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    role: UserRole;
+    permissions: string[];
+    assignedAreas: string[];
+    workingHours: { start: string; end: string };
+    workingDays: string[];
+    employeeId: string;
+    hireDate: string;
+  }): Promise<ApiResponse<AdminUser>> {
+    try {
+      // Validate Nigerian phone number
+      if (!validateNigerianPhone(adminData.phone)) {
+        return {
+          success: false,
+          error: 'Invalid Nigerian phone number format. Use +234XXXXXXXXX'
+        };
+      }
+
+      // Create Appwrite account
+      const appwriteUser = await account.create(
+        ID.unique(),
+        adminData.email,
+        adminData.password,
+        `${adminData.firstName} ${adminData.lastName}`
+      );
+
+      // Create admin user profile in database
+      const adminUserData = {
+        email: adminData.email,
+        firstName: adminData.firstName,
+        lastName: adminData.lastName,
+        phone: {
+          number: adminData.phone,
+          isWhatsApp: false
+        },
+        role: adminData.role,
+        isActive: true,
+        permissions: adminData.permissions,
+        assignedAreas: adminData.assignedAreas,
+        workingHours: adminData.workingHours,
+        workingDays: adminData.workingDays,
+        employeeId: adminData.employeeId,
+        hireDate: adminData.hireDate,
+        totalOrdersHandled: 0,
+        averageRating: 0
+      };
+
+      // Save to AdminUsers collection using the same ID as the auth user
+      const appwriteData = {
+        email: adminUserData.email,
+        firstName: adminUserData.firstName,
+        lastName: adminUserData.lastName,
+        phoneNumber: adminUserData.phone.number,
+        role: adminUserData.role,
+        isActive: adminUserData.isActive,
+        permissions: JSON.stringify(adminUserData.permissions),
+        assignedAreas: JSON.stringify(adminUserData.assignedAreas),
+        workingDays: JSON.stringify(adminUserData.workingDays),
+        employeeId: adminUserData.employeeId,
+        hireDate: adminUserData.hireDate,
+        totalOrdersHandled: 0,
+        averageRating: 0
+      };
+
+      await databases.createDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.collections.adminUsers,
+        appwriteUser.$id,
+        appwriteData
+      );
+
+      // Send verification email
+      await account.createVerification('http://localhost:3000/verify-email');
+
+      return {
+        success: true,
+        data: {
+          $id: appwriteUser.$id,
+          $createdAt: new Date().toISOString(),
+          $updatedAt: new Date().toISOString(),
+          $permissions: [],
+          $collectionId: appwriteConfig.collections.adminUsers,
+          $databaseId: appwriteConfig.databaseId,
+          ...adminUserData
+        } as AdminUser,
+        message: 'Staff member registered successfully. They can now login at /admin/login'
+      };
+
+    } catch (error: any) {
+      console.error('Admin registration error:', error);
+      return {
+        success: false,
+        error: error.message || 'Staff registration failed. Please try again.'
       };
     }
   }

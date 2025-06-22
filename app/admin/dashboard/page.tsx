@@ -7,9 +7,11 @@ import { useAuth } from '@/lib/context/AuthContext';
 import { databaseService } from '@/lib/database';
 import { Order, OrderStatus, Service } from '@/lib/types';
 import { formatNairaFromKobo } from '@/lib/validations';
+import { withAuth } from '@/lib/context/AuthContext';
+import { responsiveClasses as rc } from '@/lib/animations';
 
-export default function AdminDashboardPage() {
-  const { user, isAuthenticated, userRole, logout } = useAuth();
+function AdminDashboardPage() {
+  const { user, isAdmin, userProfile, logout } = useAuth();
   const router = useRouter();
   
   const [orders, setOrders] = useState<Order[]>([]);
@@ -22,15 +24,11 @@ export default function AdminDashboardPage() {
     todayRevenue: 0,
     totalCustomers: 0
   });
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated || userRole !== 'admin') {
-      router.push('/admin/login');
-      return;
-    }
-
     loadDashboardData();
-  }, [isAuthenticated, userRole, router]);
+  }, []);
 
   const loadDashboardData = async () => {
     try {
@@ -132,46 +130,43 @@ export default function AdminDashboardPage() {
     router.push('/admin/login');
   };
 
-  if (!isAuthenticated || userRole !== 'admin' || !user) {
+  if (!user) {
     return null;
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className={`${rc.header} border-b border-gray-200`}>
+        <div className={rc.container}>
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <Link href="/admin/dashboard" className="text-2xl font-bold text-blue-600">
+              {/* Mobile menu button */}
+              <button
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+              >
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              
+              <Link href="/admin/dashboard" className="text-2xl font-bold text-blue-600 animate-fadeIn">
                 Gab'z Admin
               </Link>
-              <span className="text-sm text-gray-500 hidden sm:block">
+              <span className="text-sm text-gray-500 hidden sm:block animate-fadeIn">
                 Staff Dashboard
               </span>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/admin/orders"
-                className="text-gray-600 hover:text-gray-900"
-              >
-                Orders
-              </Link>
-              <Link
-                href="/admin/customers"
-                className="text-gray-600 hover:text-gray-900"
-              >
-                Customers
-              </Link>
-              <Link
-                href="/admin/services"
-                className="text-gray-600 hover:text-gray-900"
-              >
-                Services
-              </Link>
-              
-              <div className="relative">
+            <div className="hidden lg:flex items-center space-x-4 animate-slideIn">
+              <Link href="/admin/orders" className="text-gray-600 hover:text-gray-900">Orders</Link>
+              <Link href="/admin/customers" className="text-gray-600 hover:text-gray-900">Customers</Link>
+              <Link href="/admin/services/manage" className="text-gray-600 hover:text-gray-900">Services</Link>
+            </div>
+
+            <div className="flex items-center">
+              <div className="relative animate-scaleIn">
                 <button
                   onClick={() => {
                     const menu = document.getElementById('admin-menu');
@@ -180,12 +175,12 @@ export default function AdminDashboardPage() {
                   className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
                 >
                   <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-medium">
-                    {user.name.charAt(0).toUpperCase()}
+                    {user?.name.charAt(0).toUpperCase()}
                   </div>
-                  <span className="hidden sm:block">{user.name}</span>
+                  <span className="hidden sm:block">{user?.name}</span>
                 </button>
                 
-                <div id="admin-menu" className="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                <div id="admin-menu" className="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 animate-fadeIn">
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -199,241 +194,205 @@ export default function AdminDashboardPage() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-gray-600">
-            Welcome back, {user.name}! Manage orders and monitor business operations.
-          </p>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-yellow-100 rounded-lg">
-                <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Pending Orders</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.pendingOrders}</p>
-              </div>
-            </div>
+      {/* Mobile Sidebar */}
+      <div className={`${rc.sidebar} bg-white lg:hidden ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="h-full flex flex-col py-6 px-4">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-gray-900">Menu</h2>
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">In Progress</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.inProgressOrders}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Today's Revenue</p>
-                <p className="text-2xl font-bold text-gray-900">{formatNairaFromKobo(stats.todayRevenue)}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Today's Orders</p>
-                <p className="text-2xl font-bold text-gray-900">{todayOrders.length}</p>
-              </div>
-            </div>
+          <div className="flex flex-col space-y-4">
+            <Link href="/admin/orders" className="text-gray-600 hover:text-gray-900 py-2">Orders</Link>
+            <Link href="/admin/customers" className="text-gray-600 hover:text-gray-900 py-2">Customers</Link>
+            <Link href="/admin/services/manage" className="text-gray-600 hover:text-gray-900 py-2">Services</Link>
           </div>
         </div>
+      </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Link
-            href="/admin/orders/new"
-            className="bg-blue-600 hover:bg-blue-700 text-white p-6 rounded-lg transition-colors"
-          >
-            <div className="flex items-center">
-              <div className="p-2 bg-blue-500 rounded-lg mr-4">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-semibold">New Order</h3>
-                <p className="text-blue-100 text-sm">Create manual order</p>
+      {/* Main Content */}
+      <main className={`${rc.main} ${isSidebarOpen ? 'lg:ml-64' : ''}`}>
+        <div className={rc.container}>
+          {/* Header */}
+          <div className="mb-8 animate-fadeIn">
+            <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
+            <p className="text-gray-600">Welcome back, {user?.name}</p>
+          </div>
+
+          {/* Stats Grid */}
+          <div className={`${rc.grid} mb-8`}>
+            {/* Stats cards with animations */}
+            <div className={`${rc.card} animate-slideIn`} style={{ animationDelay: '0.1s' }}>
+              <div className="flex items-center">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Total Orders</p>
+                  <p className="text-2xl font-bold text-gray-900">{stats.totalOrders}</p>
+                </div>
               </div>
             </div>
-          </Link>
 
-          <Link
-            href="/admin/services/manage"
-            className="bg-white hover:bg-gray-50 border border-gray-200 p-6 rounded-lg transition-colors"
-          >
-            <div className="flex items-center">
-              <div className="p-2 bg-gray-100 rounded-lg mr-4">
-                <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Manage Services</h3>
-                <p className="text-gray-600 text-sm">Update pricing & availability</p>
+            <div className={`${rc.card} animate-slideIn`} style={{ animationDelay: '0.2s' }}>
+              <div className="flex items-center">
+                <div className="p-2 bg-yellow-100 rounded-lg">
+                  <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Pending Orders</p>
+                  <p className="text-2xl font-bold text-gray-900">{stats.pendingOrders}</p>
+                </div>
               </div>
             </div>
-          </Link>
 
-          <Link
-            href="/admin/reports"
-            className="bg-white hover:bg-gray-50 border border-gray-200 p-6 rounded-lg transition-colors"
-          >
-            <div className="flex items-center">
-              <div className="p-2 bg-gray-100 rounded-lg mr-4">
-                <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Reports</h3>
-                <p className="text-gray-600 text-sm">View analytics & insights</p>
+            <div className={`${rc.card} animate-slideIn`} style={{ animationDelay: '0.3s' }}>
+              <div className="flex items-center">
+                <div className="p-2 bg-purple-100 rounded-lg">
+                  <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                  </svg>
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">In Progress</p>
+                  <p className="text-2xl font-bold text-gray-900">{stats.inProgressOrders}</p>
+                </div>
               </div>
             </div>
-          </Link>
 
-          <Link
-            href="/admin/timeslots"
-            className="bg-white hover:bg-gray-50 border border-gray-200 p-6 rounded-lg transition-colors"
-          >
-            <div className="flex items-center">
-              <div className="p-2 bg-gray-100 rounded-lg mr-4">
-                <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Time Slots</h3>
-                <p className="text-gray-600 text-sm">Manage availability</p>
+            <div className={`${rc.card} animate-slideIn`} style={{ animationDelay: '0.4s' }}>
+              <div className="flex items-center">
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Today's Revenue</p>
+                  <p className="text-2xl font-bold text-gray-900">{formatNairaFromKobo(stats.todayRevenue)}</p>
+                </div>
               </div>
             </div>
-          </Link>
-        </div>
+          </div>
 
-        {/* Recent Orders */}
-        <div className="bg-white rounded-lg shadow-sm">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">Pending Orders</h2>
+          {/* Quick Actions */}
+          <div className={`${rc.card} mb-8 animate-fadeIn`}>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <Link
                 href="/admin/orders"
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
               >
-                View all orders
+                <h3 className="font-medium text-gray-900">View Orders</h3>
+                <p className="text-sm text-gray-600">Manage customer orders and track progress</p>
+              </Link>
+              <Link
+                href="/admin/services/manage"
+                className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+              >
+                <h3 className="font-medium text-gray-900">Manage Services</h3>
+                <p className="text-sm text-gray-600">Update pricing & availability</p>
+              </Link>
+              <Link
+                href="/admin/customers"
+                className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+              >
+                <h3 className="font-medium text-gray-900">Customer List</h3>
+                <p className="text-sm text-gray-600">View customer information and history</p>
               </Link>
             </div>
           </div>
 
-          <div className="p-6">
-            {isLoading ? (
-              <div className="space-y-4">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="animate-pulse">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gray-200 rounded-lg"></div>
-                      <div className="flex-1">
-                        <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                        <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-                      </div>
-                      <div className="w-20 h-6 bg-gray-200 rounded"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : orders.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="text-gray-400 text-6xl mb-4">📋</div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No pending orders</h3>
-                <p className="text-gray-600">
-                  All caught up! No orders waiting for processing.
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {orders.slice(0, 10).map((order) => (
-                  <div
-                    key={order.$id}
-                    className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-2xl">
-                        {getStatusIcon(order.status)}
-                      </div>
-                      <div>
-                        <h3 className="font-medium text-gray-900">
-                          Order #{order.orderNumber}
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          {new Date(order.$createdAt).toLocaleDateString('en-NG', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </p>
-                        <p className="text-sm font-medium text-gray-900">
+          {/* Recent Orders */}
+          <div className={`${rc.card} animate-fadeIn`}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold text-gray-900">Recent Orders</h2>
+              <Link href="/admin/orders" className="text-sm text-blue-600 hover:text-blue-800">
+                View all
+              </Link>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead>
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Order #
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Amount
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {isLoading ? (
+                    [...Array(3)].map((_, i) => (
+                      <tr key={i} className="animate-pulse">
+                        <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24"></div></td>
+                        <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-20"></div></td>
+                        <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-16"></div></td>
+                        <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24"></div></td>
+                        <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-16"></div></td>
+                      </tr>
+                    ))
+                  ) : (
+                    orders.map((order, index) => (
+                      <tr
+                        key={order.$id}
+                        className="hover:bg-gray-50 transition-colors duration-200 animate-fadeIn"
+                        style={{ animationDelay: `${index * 0.1}s` }}
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {order.orderNumber}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}>
+                            {getStatusIcon(order.status)} {order.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {formatNairaFromKobo(order.finalAmount)}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center space-x-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${getStatusColor(order.status)}`}>
-                        {order.status.replace('_', ' ')}
-                      </span>
-                      
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => updateOrderStatus(order.$id, OrderStatus.PICKED_UP)}
-                          className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-                        >
-                          Mark Picked Up
-                        </button>
-                        <Link
-                          href={`/admin/orders/${order.$id}`}
-                          className="text-gray-600 hover:text-gray-700 text-sm font-medium"
-                        >
-                          View Details
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {new Date(order.$createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <Link
+                            href={`/admin/orders/${order.$id}`}
+                            className="text-blue-600 hover:text-blue-900"
+                          >
+                            View
+                          </Link>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
+
+export default withAuth(AdminDashboardPage);

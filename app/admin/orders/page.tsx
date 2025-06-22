@@ -7,9 +7,10 @@ import { useAuth } from '@/lib/context/AuthContext';
 import { databaseService } from '@/lib/database';
 import { Order, OrderStatus } from '@/lib/types';
 import { formatNairaFromKobo } from '@/lib/validations';
+import { withAuth } from '@/lib/context/AuthContext';
 
-export default function AdminOrdersPage() {
-  const { user, isAuthenticated, userRole } = useAuth();
+function AdminOrdersPage() {
+  const { user, isAdmin } = useAuth();
   const router = useRouter();
   
   const [orders, setOrders] = useState<Order[]>([]);
@@ -20,13 +21,8 @@ export default function AdminOrdersPage() {
   const [dateFilter, setDateFilter] = useState('');
 
   useEffect(() => {
-    if (!isAuthenticated || userRole !== 'admin') {
-      router.push('/admin/login');
-      return;
-    }
-
     loadOrders();
-  }, [isAuthenticated, userRole, router]);
+  }, []);
 
   useEffect(() => {
     filterOrders();
@@ -180,7 +176,7 @@ export default function AdminOrdersPage() {
     }
   };
 
-  if (!isAuthenticated || userRole !== 'admin') {
+  if (!isAdmin) {
     return null;
   }
 
@@ -436,3 +432,5 @@ export default function AdminOrdersPage() {
     </div>
   );
 }
+
+export default withAuth(AdminOrdersPage);

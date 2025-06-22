@@ -13,7 +13,8 @@ import {
   ServiceType,
   ApiResponse,
   PaginatedResponse,
-  OrderHistoryEntry
+  OrderHistoryEntry,
+  UserRole
 } from './types';
 import {
   serviceSchema,
@@ -750,6 +751,30 @@ export class DatabaseService {
     }
   }
 
+  // Get all admin users (owner only)
+  async getAllAdminUsers(limit: number = 100): Promise<ApiResponse<AdminUser[]>> {
+    try {
+      const response = await databases.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.collections.adminUsers,
+        [
+          Query.orderDesc('$createdAt'),
+          Query.limit(limit)
+        ]
+      );
+
+      return {
+        success: true,
+        data: response.documents as AdminUser[]
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: 'Failed to fetch admin users'
+      };
+    }
+  }
+
   // Get orders by customer ID
   async getOrdersByCustomer(customerId: string, limit: number = 50): Promise<ApiResponse<Order[]>> {
     try {
@@ -849,6 +874,77 @@ export class DatabaseService {
       return {
         success: false,
         error: `Service with ID ${serviceId} not found`
+      };
+    }
+  }
+
+  // Create admin user (staff registration)
+  async createAdminUser(adminData: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    phone: { number: string; isWhatsApp: boolean };
+    role: UserRole;
+    isActive: boolean;
+    permissions: string[];
+    assignedAreas: string[];
+    workingHours: { start: string; end: string };
+    workingDays: string[];
+    employeeId: string;
+    hireDate: string;
+  }): Promise<ApiResponse<AdminUser>> {
+    try {
+      // Convert AdminUser data to Appwrite-compatible format
+      const appwriteData = {
+        email: adminData.email,
+        firstName: adminData.firstName,
+        lastName: adminData.lastName,
+        phoneNumber: adminData.phone.number,
+        isWhatsAppNumber: adminData.phone.isWhatsApp,
+        role: adminData.role,
+        isActive: adminData.isActive,
+        permissions: JSON.stringify(adminData.permissions),
+        assignedAreas: JSON.stringify(adminData.assignedAreas),
+        workingHoursStart: adminData.workingHours.start,
+        workingHoursEnd: adminData.workingHours.end,
+        workingDays: JSON.stringify(adminData.workingDays),
+        employeeId: adminData.employeeId,
+        hireDate: adminData.hireDate,
+        totalOrdersHandled: 0,
+        averageRating: 0
+      };
+
+      const adminUserDoc = await databases.createDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.collections.adminUsers,
+        ID.unique(),
+        appwriteData
+      );
+
+      // Convert back to AdminUser format for response
+      const formattedAdminUser: AdminUser = {
+        $id: adminUserDoc.$id,
+        $createdAt: adminUserDoc.$createdAt,
+        $updatedAt: adminUserDoc.$updatedAt,
+        $permissions: adminUserDoc.$permissions,
+        $collectionId: adminUserDoc.$collectionId,
+        $databaseId: adminUserDoc.$databaseId,
+        ...adminData,
+        lastLogin: undefined,
+        totalOrdersHandled: 0,
+        averageRating: 0
+      };
+
+      return {
+        success: true,
+        data: formattedAdminUser,
+        message: 'Staff member created successfully'
+      };
+    } catch (error: any) {
+      console.error('Failed to create admin user:', error);
+      return {
+        success: false,
+        error: error.message || 'Failed to create staff member'
       };
     }
   }

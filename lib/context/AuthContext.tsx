@@ -29,6 +29,7 @@ interface AuthContextType {
   
   // Password management
   resetPassword: (email: string) => Promise<ApiResponse<null>>;
+  completePasswordReset: (userId: string, secret: string, newPassword: string) => Promise<ApiResponse<null>>;
   updatePassword: (currentPassword: string, newPassword: string) => Promise<ApiResponse<null>>;
   
   // Email verification
@@ -48,7 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Computed values
   const isAuthenticated = !!user;
-  const isAdmin = userRole !== null && userRole !== UserRole.CUSTOMER;
+  const isAdmin = userRole === UserRole.ADMIN || userRole === UserRole.OWNER || userRole === UserRole.STAFF;
 
   // Initialize authentication state
   useEffect(() => {
@@ -76,11 +77,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (customerResponse.success && customerResponse.data) {
             setUserProfile(customerResponse.data);
             setUserRole(UserRole.CUSTOMER);
+          } else {
+            // User exists in auth but has no profile, log them out.
+            console.warn('User authenticated but no profile found. Logging out.');
+            await logout();
           }
         }
+      } else {
+        // No session, clear user state
+        setUser(null);
+        setUserProfile(null);
+        setUserRole(null);
       }
     } catch (error) {
       console.error('Auth initialization error:', error);
+      // Clear state on error
+      setUser(null);
+      setUserProfile(null);
+      setUserRole(null);
     } finally {
       setIsLoading(false);
     }
@@ -227,6 +241,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return await authService.resetPassword(email);
   };
 
+  // Complete password reset
+  const completePasswordReset = async (
+    userId: string,
+    secret: string,
+    newPassword: string
+  ): Promise<ApiResponse<null>> => {
+    return await authService.completePasswordReset(userId, secret, newPassword);
+  };
+
   // Update password
   const updatePassword = async (currentPassword: string, newPassword: string): Promise<ApiResponse<null>> => {
     return await authService.updatePassword(currentPassword, newPassword);
@@ -261,6 +284,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     logout,
     refreshUser,
     resetPassword,
+    completePasswordReset,
     updatePassword,
     verifyEmail,
     sendEmailVerification

@@ -5,9 +5,19 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/context/AuthContext';
 import { validateNigerianPhone } from '@/lib/validations';
+import { PasswordInput } from '@/components/ui/password-input';
+
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+}
 
 export default function RegisterPage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
     email: '',
@@ -127,11 +137,12 @@ export default function RegisterPage() {
                     id="firstName"
                     name="firstName"
                     type="text"
+                    autoComplete="given-name"
                     required
                     value={formData.firstName}
                     onChange={handleInputChange}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="First name"
+                    placeholder="Enter your first name"
                   />
                 </div>
               </div>
@@ -145,11 +156,12 @@ export default function RegisterPage() {
                     id="lastName"
                     name="lastName"
                     type="text"
+                    autoComplete="family-name"
                     required
                     value={formData.lastName}
                     onChange={handleInputChange}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Last name"
+                    placeholder="Enter your last name"
                   />
                 </div>
               </div>
@@ -170,7 +182,7 @@ export default function RegisterPage() {
                   value={formData.email}
                   onChange={handleInputChange}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="your.email@example.com"
+                  placeholder="Enter your email"
                 />
               </div>
             </div>
@@ -185,65 +197,44 @@ export default function RegisterPage() {
                   id="phone"
                   name="phone"
                   type="tel"
+                  autoComplete="tel"
                   required
                   value={formData.phone}
                   onChange={handleInputChange}
                   className={`appearance-none block w-full px-3 py-2 border rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
                     phoneError ? 'border-red-300' : 'border-gray-300'
                   }`}
-                  placeholder="+234XXXXXXXXX"
+                  placeholder="Enter your phone number"
                 />
                 {phoneError && (
                   <p className="mt-1 text-sm text-red-600">{phoneError}</p>
                 )}
                 <p className="mt-1 text-xs text-gray-500">
-                  Enter your Nigerian mobile number (starts with +234)
+                  Format: +234XXXXXXXXXX
                 </p>
               </div>
             </div>
 
-            {/* Password */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Create a password"
-                />
-                <p className="mt-1 text-xs text-gray-500">
-                  Must be at least 8 characters with uppercase, lowercase, and number
-                </p>
-              </div>
-            </div>
+            <PasswordInput
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              autoComplete="new-password"
+              label="Password"
+              placeholder="Create a password"
+              helperText="Must be at least 8 characters with uppercase, lowercase, and number"
+            />
 
-            {/* Confirm Password */}
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Confirm password
-              </label>
-              <div className="mt-1">
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Confirm your password"
-                />
-              </div>
-            </div>
+            <PasswordInput
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              autoComplete="new-password"
+              label="Confirm password"
+              placeholder="Confirm your password"
+            />
 
             {/* Terms */}
             <div className="text-sm text-gray-600">
