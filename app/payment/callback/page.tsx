@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { paymentService } from '@/lib/payment';
 import { databaseService } from '@/lib/database';
+import { useAuth } from '@/lib/context/AuthContext';
 
 interface VerificationResult {
   success: boolean;
@@ -237,9 +238,11 @@ function PaymentCallbackContent() {
 
 export default function PaymentCallbackPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-    </div>}>
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    }>
       <PaymentCallbackContent />
     </Suspense>
   );
