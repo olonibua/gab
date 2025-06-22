@@ -9,6 +9,7 @@ import { formatNairaFromKobo, convertNairaToKobo } from '@/lib/validations';
 import { authService } from '@/lib/auth';
 import { responsiveClasses as rc } from '@/lib/animations';
 import Link from 'next/link';
+import { Navbar } from '@/components/ui/navbar';
 
 // Interface for customer with calculated stats
 interface CustomerWithStats extends User {
@@ -546,7 +547,7 @@ export default function OwnerDashboard() {
           <div className="flex items-center">
             <div className="p-2 bg-yellow-100 rounded-lg">
               <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
             <div className="ml-4">
@@ -1189,87 +1190,10 @@ export default function OwnerDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className={`${rc.header} border-b border-gray-200`}>
-        <div className={rc.container}>
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              {/* Mobile menu button */}
-              <button
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-              >
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-              
-              <Link href="/owner/dashboard" className="text-2xl font-bold text-purple-600 animate-fadeIn">
-                Gab'z Owner
-              </Link>
-              <span className="text-sm text-gray-500 hidden sm:block animate-fadeIn">
-                Business Dashboard
-              </span>
-            </div>
-            
-            <div className="hidden lg:flex items-center space-x-4 animate-slideIn">
-              <Link href="/admin/dashboard" className="text-gray-600 hover:text-gray-900">Staff Dashboard</Link>
-              <Link href="/owner/reports" className="text-gray-600 hover:text-gray-900">Reports</Link>
-              <Link href="/owner/settings" className="text-gray-600 hover:text-gray-900">Settings</Link>
-            </div>
-
-            <div className="flex items-center">
-              <div className="relative animate-scaleIn">
-                <button
-                  onClick={() => {
-                    const menu = document.getElementById('owner-menu');
-                    menu?.classList.toggle('hidden');
-                  }}
-                  className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
-                >
-                  <div className="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center font-medium">
-                    {user?.name.charAt(0).toUpperCase()}
-                  </div>
-                  <span className="hidden sm:block">{user?.name}</span>
-                </button>
-                
-                <div id="owner-menu" className="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 animate-fadeIn">
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Sign out
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile Sidebar */}
-      <div className={`${rc.sidebar} bg-white lg:hidden ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="h-full flex flex-col py-6 px-4">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-gray-900">Menu</h2>
-            <button
-              onClick={() => setIsSidebarOpen(false)}
-              className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-            >
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-          <div className="flex flex-col space-y-4">
-            <Link href="/admin/dashboard" className="text-gray-600 hover:text-gray-900 py-2">Staff Dashboard</Link>
-            <Link href="/owner/reports" className="text-gray-600 hover:text-gray-900 py-2">Reports</Link>
-            <Link href="/owner/settings" className="text-gray-600 hover:text-gray-900 py-2">Settings</Link>
-          </div>
-        </div>
-      </div>
+      <Navbar variant="owner" />
 
       {/* Main Content */}
-      <main className={`${rc.main} ${isSidebarOpen ? 'lg:ml-64' : ''}`}>
+      <main className={`${rc.main}`}>
         <div className={rc.container}>
           {/* Header */}
           <div className="mb-8 animate-fadeIn">

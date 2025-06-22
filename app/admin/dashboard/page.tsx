@@ -219,7 +219,7 @@ function AdminDashboardPage() {
       {/* Main Content */}
       <main className={`${rc.main} ${isSidebarOpen ? 'lg:ml-64' : ''}`}>
         <div className={rc.container}>
-          {/* Header */}
+        {/* Header */}
           <div className="mb-8 animate-fadeIn">
             <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
             <p className="text-gray-600">Welcome back, {user?.name}</p>
@@ -240,69 +240,69 @@ function AdminDashboardPage() {
                   <p className="text-2xl font-bold text-gray-900">{stats.totalOrders}</p>
                 </div>
               </div>
-            </div>
+        </div>
 
             <div className={`${rc.card} animate-slideIn`} style={{ animationDelay: '0.2s' }}>
-              <div className="flex items-center">
-                <div className="p-2 bg-yellow-100 rounded-lg">
-                  <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Pending Orders</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.pendingOrders}</p>
-                </div>
+            <div className="flex items-center">
+              <div className="p-2 bg-yellow-100 rounded-lg">
+                <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
               </div>
-            </div>
-
-            <div className={`${rc.card} animate-slideIn`} style={{ animationDelay: '0.3s' }}>
-              <div className="flex items-center">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-                  </svg>
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">In Progress</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.inProgressOrders}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className={`${rc.card} animate-slideIn`} style={{ animationDelay: '0.4s' }}>
-              <div className="flex items-center">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Today's Revenue</p>
-                  <p className="text-2xl font-bold text-gray-900">{formatNairaFromKobo(stats.todayRevenue)}</p>
-                </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Pending Orders</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.pendingOrders}</p>
               </div>
             </div>
           </div>
 
-          {/* Quick Actions */}
+            <div className={`${rc.card} animate-slideIn`} style={{ animationDelay: '0.3s' }}>
+            <div className="flex items-center">
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">In Progress</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.inProgressOrders}</p>
+              </div>
+            </div>
+          </div>
+
+            <div className={`${rc.card} animate-slideIn`} style={{ animationDelay: '0.4s' }}>
+            <div className="flex items-center">
+              <div className="p-2 bg-green-100 rounded-lg">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Today's Revenue</p>
+                <p className="text-2xl font-bold text-gray-900">{formatNairaFromKobo(stats.todayRevenue)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
           <div className={`${rc.card} mb-8 animate-fadeIn`}>
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Link
+          <Link
                 href="/admin/orders"
                 className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
               >
                 <h3 className="font-medium text-gray-900">View Orders</h3>
                 <p className="text-sm text-gray-600">Manage customer orders and track progress</p>
-              </Link>
-              <Link
-                href="/admin/services/manage"
+          </Link>
+          <Link
+            href="/admin/services/manage"
                 className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
               >
                 <h3 className="font-medium text-gray-900">Manage Services</h3>
                 <p className="text-sm text-gray-600">Update pricing & availability</p>
-              </Link>
+          </Link>
               <Link
                 href="/admin/customers"
                 className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
@@ -343,7 +343,7 @@ function AdminDashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {isLoading ? (
+            {isLoading ? (
                     [...Array(3)].map((_, i) => (
                       <tr key={i} className="animate-pulse">
                         <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24"></div></td>
@@ -353,10 +353,10 @@ function AdminDashboardPage() {
                         <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-16"></div></td>
                       </tr>
                     ))
-                  ) : (
+            ) : (
                     orders.map((order, index) => (
                       <tr
-                        key={order.$id}
+                    key={order.$id}
                         className="hover:bg-gray-50 transition-colors duration-200 animate-fadeIn"
                         style={{ animationDelay: `${index * 0.1}s` }}
                       >
@@ -375,19 +375,19 @@ function AdminDashboardPage() {
                           {new Date(order.$createdAt).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <Link
-                            href={`/admin/orders/${order.$id}`}
+                        <Link
+                          href={`/admin/orders/${order.$id}`}
                             className="text-blue-600 hover:text-blue-900"
-                          >
+                        >
                             View
-                          </Link>
+                        </Link>
                         </td>
                       </tr>
                     ))
                   )}
                 </tbody>
               </table>
-            </div>
+              </div>
           </div>
         </div>
       </main>
