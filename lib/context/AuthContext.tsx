@@ -195,17 +195,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Logout
   const logout = async (): Promise<void> => {
+    // Immediately clear state for a faster UI response
+    setUser(null);
+    setUserProfile(null);
+    setUserRole(null);
+    
     try {
-      setIsLoading(true);
       await authService.logout();
     } catch (error) {
       console.error('Logout error:', error);
-    } finally {
-      // Clear state regardless of API call success
-      setUser(null);
-      setUserProfile(null);
-      setUserRole(null);
-      setIsLoading(false);
+      // If logout fails, the state is already cleared, which is often the desired behavior.
+      // You could add logic here to try and re-authenticate if needed.
     }
   };
 
@@ -270,8 +270,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return await authService.sendEmailVerification();
   };
 
-  // Context value
-  const contextValue: AuthContextType = {
+  // While the authentication state is initializing, show a loading indicator
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="relative flex justify-center items-center mb-4">
+            <div className="w-16 h-16 border-4 border-blue-200 rounded-full animate-spin"></div>
+            <div className="absolute w-16 h-16 border-4 border-t-transparent border-blue-600 rounded-full animate-spin"></div>
+            <span className="absolute text-2xl">🧺</span>
+          </div>
+          <p className="text-lg font-semibold text-gray-700">Loading your dashboard...</p>
+          <p className="text-sm text-gray-500">Please wait a moment.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Value for the context provider
+  const value: AuthContextType = {
     user,
     userProfile,
     userRole,
@@ -291,7 +308,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
