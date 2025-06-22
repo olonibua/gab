@@ -17,10 +17,9 @@ export default function ServicesPage() {
 
   const serviceTypes = [
     { value: 'all', label: 'All Services' },
-    { value: ServiceType.WASH_FOLD, label: 'Wash & Fold' },
+    { value: ServiceType.WASH_AND_FOLD, label: 'Wash & Fold' },
     { value: ServiceType.DRY_CLEANING, label: 'Dry Cleaning' },
-    { value: ServiceType.IRONING, label: 'Ironing' },
-    { value: ServiceType.EXPRESS, label: 'Express' }
+    { value: ServiceType.IRONING, label: 'Ironing' }
   ];
 
   const lagosAreas = [
@@ -67,14 +66,12 @@ export default function ServicesPage() {
 
   const getServiceIcon = (type: ServiceType) => {
     switch (type) {
-      case ServiceType.WASH_FOLD:
+      case ServiceType.WASH_AND_FOLD:
         return '🧺';
       case ServiceType.DRY_CLEANING:
         return '👔';
       case ServiceType.IRONING:
         return '👕';
-      case ServiceType.EXPRESS:
-        return '⚡';
       default:
         return '🧽';
     }
