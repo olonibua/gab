@@ -88,7 +88,7 @@ export class AuthService {
       );
 
       // Now send verification email (user is authenticated)
-      await account.createVerification('http://localhost:3000/verify-email');
+      await account.createVerification(process.env.NEXT_PUBLIC_APP_URL + '/verify-email');
 
       return {
         success: true,
@@ -484,7 +484,7 @@ export class AuthService {
   // Send Email Verification
   async sendEmailVerification(): Promise<ApiResponse<null>> {
     try {
-      await account.createVerification('https://gab-dun.vercel.app/verify-email');
+      await account.createVerification(process.env.NEXT_PUBLIC_APP_URL + '/verify-email');
       return {
         success: true,
         message: 'Verification email sent'
@@ -647,7 +647,7 @@ export class AuthService {
       );
 
       // Send verification email
-      await account.createVerification('http://localhost:3000/verify-email');
+      await account.createVerification(process.env.NEXT_PUBLIC_APP_URL + '/verify-email');
 
       return {
         success: true,
