@@ -333,7 +333,7 @@ export default function ServicesPage() {
                 </div>
 
                 {/* Description */}
-                <p className="text-sm md:text-base text-gray-600 mb-3 md:mb-4 line-clamp-2">
+                <p className="text-sm md:text-base text-gray-600 mb-3 md:mb-4 line-clamp-2 break-words overflow-hidden">
                   {service.description}
                 </p>
 
