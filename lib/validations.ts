@@ -12,8 +12,8 @@ import {
 // Nigerian-specific validations
 export const nigerianPhoneSchema = z.object({
   number: z.string()
-    .regex(NIGERIAN_PHONE_REGEX, 'Invalid Nigerian phone number format. Use +234XXXXXXXXX')
-    .refine((phone) => phone.length === 14, 'Phone number must be exactly 14 characters'),
+    .regex(NIGERIAN_PHONE_REGEX, 'Invalid Nigerian phone number format. Use 0XXXXXXXXXX')
+    .refine((phone) => phone.length === 11, 'Phone number must be exactly 11 characters'),
   isWhatsApp: z.boolean().default(false)
 });
 
@@ -56,7 +56,7 @@ export const userRegistrationSchema = z.object({
     .max(50, 'Last name must not exceed 50 characters')
     .regex(/^[a-zA-Z\s'-]+$/, 'Last name can only contain letters, spaces, hyphens, and apostrophes'),
   phone: z.string()
-    .regex(NIGERIAN_PHONE_REGEX, 'Invalid Nigerian phone number format. Use +234XXXXXXXXX'),
+    .regex(NIGERIAN_PHONE_REGEX, 'Invalid Nigerian phone number format. Use 0XXXXXXXXXX'),
 //   addresses: z.array(nigerianAddressSchema).min(1, 'At least one address is required').max(5, 'Maximum 5 addresses allowed'),
 //   dateOfBirth: z.string().datetime().optional(),
 //   gender: z.enum(['male', 'female', 'other']).optional(),

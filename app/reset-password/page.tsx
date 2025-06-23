@@ -5,6 +5,8 @@ import { useAuth } from '@/lib/context/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { PasswordInput } from '@/components/ui/password-input';
+import { BackButton } from '@/components/ui/back-button';
+import { motion } from 'framer-motion';
 
 function ResetPasswordForm() {
   const [password, setPassword] = useState('');
@@ -67,7 +69,17 @@ function ResetPasswordForm() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <motion.div 
+        className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Back Button */}
+        <div className="absolute top-6 left-6">
+          <BackButton href="/login" variant="minimal" />
+        </div>
+
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Password reset successful!
@@ -84,12 +96,22 @@ function ResetPasswordForm() {
             </Link>
           </div>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <motion.div 
+      className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Back Button */}
+      <div className="absolute top-6 left-6">
+        <BackButton href="/login" variant="minimal" />
+      </div>
+
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Reset your password
@@ -150,7 +172,7 @@ function ResetPasswordForm() {
           </form>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

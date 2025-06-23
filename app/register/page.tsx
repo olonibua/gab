@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/context/AuthContext';
 import { validateNigerianPhone } from '@/lib/validations';
 import { PasswordInput } from '@/components/ui/password-input';
+import { BackButton } from '@/components/ui/back-button';
+import { motion } from 'framer-motion';
 
 interface FormData {
   firstName: string;
@@ -28,6 +30,7 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [phoneError, setPhoneError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   
   const { register } = useAuth();
   const router = useRouter();
@@ -39,9 +42,20 @@ export default function RegisterPage() {
     // Real-time phone validation
     if (name === 'phone') {
       if (value && !validateNigerianPhone(value)) {
-        setPhoneError('Please enter a valid Nigerian phone number (+234XXXXXXXXX)');
+        setPhoneError('Please enter a valid Nigerian phone number (0XXXXXXXXXX)');
       } else {
         setPhoneError('');
+      }
+    }
+
+    // Real-time password validation
+    if (name === 'password') {
+      if (value && value.length < 8) {
+        setPasswordError('Password must be at least 8 characters long');
+      } else if (value && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value)) {
+        setPasswordError('Password must contain at least one uppercase letter, one lowercase letter, and one number');
+      } else {
+        setPasswordError('');
       }
     }
   };
@@ -56,13 +70,30 @@ export default function RegisterPage() {
       return;
     }
 
-    // if (!validateNigerianPhone(formData.phone)) {
-    //   setError('Please enter a valid Nigerian phone number');
-    //   return;
-    // }
+    // Check for validation errors
+    if (phoneError) {
+      setError(phoneError);
+      return;
+    }
+
+    if (passwordError) {
+      setError(passwordError);
+      return;
+    }
+
+    // Additional validations
+    if (!validateNigerianPhone(formData.phone)) {
+      setError('Please enter a valid Nigerian phone number (0XXXXXXXXXX)');
+      return;
+    }
 
     if (formData.password.length < 8) {
       setError('Password must be at least 8 characters long');
+      return;
+    }
+
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
+      setError('Password must contain at least one uppercase letter, one lowercase letter, and one number');
       return;
     }
 
@@ -80,7 +111,7 @@ export default function RegisterPage() {
       if (result.success) {
         // Show success message and redirect to login
         setError('');
-        const successMessage = 'Registration successful! Please log in to continue.';
+        const successMessage = 'Registration successful! Please check your email for verification and log in to continue.';
         router.push(`/login?message=${encodeURIComponent(successMessage)}&type=success`);
       } else {
         setError(result.error || 'Registration failed');
@@ -93,7 +124,17 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <motion.div 
+      className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Back Button */}
+      <div className="absolute top-6 left-6">
+        <BackButton href="/" variant="minimal" />
+      </div>
+
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         {/* Logo */}
         <div className="text-center">
@@ -207,13 +248,13 @@ export default function RegisterPage() {
                   className={`appearance-none block w-full px-3 py-2 border rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
                     phoneError ? 'border-red-300' : 'border-gray-300'
                   }`}
-                  placeholder="Enter your phone number"
+                  placeholder="e.g. 08012345678"
                 />
                 {phoneError && (
                   <p className="mt-1 text-sm text-red-600">{phoneError}</p>
                 )}
                 <p className="mt-1 text-xs text-gray-500">
-                  Format: +234XXXXXXXXXX
+                  Format: 0XXXXXXXXXX
                 </p>
               </div>
             </div>
@@ -227,7 +268,11 @@ export default function RegisterPage() {
               label="Password"
               placeholder="Create a password"
               helperText="Must be at least 8 characters with uppercase, lowercase, and number"
+              className={passwordError ? 'border-red-300' : ''}
             />
+            {passwordError && (
+              <p className="mt-1 text-sm text-red-600">{passwordError}</p>
+            )}
 
             <PasswordInput
               id="confirmPassword"
@@ -254,7 +299,7 @@ export default function RegisterPage() {
             <div>
               <button
                 type="submit"
-                disabled={isLoading }
+                disabled={isLoading || phoneError !== '' || passwordError !== ''}
                 className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {isLoading ? (
@@ -294,6 +339,6 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 } 

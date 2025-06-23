@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/context/AuthContext';
 import { PasswordInput } from '@/components/ui/password-input';
+import { BackButton } from '@/components/ui/back-button';
+import { motion } from 'framer-motion';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -36,7 +38,17 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <motion.div 
+      className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Back Button */}
+      <div className="absolute top-6 left-6">
+        <BackButton href="/login" variant="minimal" />
+      </div>
+
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         {/* Logo */}
         <div className="text-center">
@@ -150,6 +162,6 @@ export default function AdminLoginPage() {
         <p>Gab'z Laundromat Staff Portal | Lagos State, Nigeria</p>
         <p className="mt-1">For technical support, contact IT department</p>
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -43,7 +43,7 @@ export class AuthService {
       if (!validateNigerianPhone(userData.phone)) {
         return {
           success: false,
-          error: 'Invalid Nigerian phone number format. Use +234XXXXXXXXX'
+          error: 'Invalid Nigerian phone number format. Use 0XXXXXXXXXX'
         };
       }
 
@@ -81,14 +81,14 @@ export class AuthService {
         userProfile
       );
 
-      // Create session for the new user (log them in)
-      await account.createEmailPasswordSession(
-        userData.email,
-        userData.password
-      );
-
-      // Now send verification email (user is authenticated)
-      await account.createVerification(process.env.NEXT_PUBLIC_APP_URL + '/verify-email');
+      // Send verification email (don't log them in automatically)
+      // We'll let them log in manually after registration
+      try {
+        await account.createVerification(process.env.NEXT_PUBLIC_APP_URL + '/verify-email');
+      } catch (verificationError) {
+        console.warn('Could not send verification email:', verificationError);
+        // Don't fail registration if verification email fails
+      }
 
       return {
         success: true,
@@ -589,7 +589,7 @@ export class AuthService {
       if (!validateNigerianPhone(adminData.phone)) {
         return {
           success: false,
-          error: 'Invalid Nigerian phone number format. Use +234XXXXXXXXX'
+          error: 'Invalid Nigerian phone number format. Use 0XXXXXXXXXX'
         };
       }
 

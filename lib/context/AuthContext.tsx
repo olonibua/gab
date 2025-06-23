@@ -171,16 +171,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       const response = await authService.registerCustomer(userData);
       
-      if (response.success && response.data) {
-        setUser(response.data);
-        setUserRole(UserRole.CUSTOMER);
-        
-        // Get customer profile
-        const profileResponse = await authService.getUserProfile(response.data.$id);
-        if (profileResponse.success && profileResponse.data) {
-          setUserProfile(profileResponse.data);
-        }
-      }
+      // Don't automatically log them in after registration
+      // Let them go to login page and sign in manually
       
       return response;
     } catch (error: any) {
@@ -280,7 +272,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             <div className="absolute w-16 h-16 border-4 border-t-transparent border-blue-600 rounded-full animate-spin"></div>
             <span className="absolute text-2xl">🧺</span>
           </div>
-          <p className="text-lg font-semibold text-gray-700">Loading your dashboard...</p>
+          <p className="text-lg font-semibold text-gray-700">Loading...</p>
           <p className="text-sm text-gray-500">Please wait a moment.</p>
         </div>
       </div>

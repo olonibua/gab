@@ -144,13 +144,13 @@ async function handlePaymentSuccess(data: any) {
 
       // Send WhatsApp notification
       try {
-        if (metadata.customerPhone && metadata.customerName) {
+      if (metadata.customerPhone && metadata.customerName) {
           console.log('📱 Sending WhatsApp notification...');
-          await whatsappService.sendPickupConfirmation(
-            metadata.customerPhone,
-            metadata.customerName,
-            metadata.orderNumber || metadata.orderId
-          );
+        await whatsappService.sendPickupConfirmation(
+          metadata.customerPhone,
+          metadata.customerName,
+          metadata.orderNumber || metadata.orderId
+        );
           console.log('✅ WhatsApp notification sent');
         } else {
           console.log('⚠️ No customer phone/name for WhatsApp notification');

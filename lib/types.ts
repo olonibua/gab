@@ -64,7 +64,7 @@ export interface NigerianAddress {
 }
 
 export interface NigerianPhone {
-  number: string; // Format: +234XXXXXXXXX
+  number: string; // Format: 0XXXXXXXXXX
   isWhatsApp: boolean;
 }
 
@@ -286,7 +286,8 @@ export interface ValidationError {
 }
 
 // Nigerian market specific constants
-export const NIGERIAN_PHONE_REGEX = /^\+234[789]\d{9}$/;
+// Updated to accept local Nigerian phone numbers without country code
+export const NIGERIAN_PHONE_REGEX = /^0[789]\d{9}$/;
 export const LAGOS_LGAS = [
   'Agege', 'Ajeromi-Ifelodun', 'Alimosho', 'Amuwo-Odofin', 'Apapa',
   'Badagry', 'Epe', 'Eti Osa', 'Ibeju-Lekki', 'Ifako-Ijaiye',
