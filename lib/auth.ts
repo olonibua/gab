@@ -150,6 +150,33 @@ export class AuthService {
 
       // Get current user
       const user = await account.get();
+      
+      // Check if this user exists in the AdminUsers collection (meaning they are staff/owner)
+      try {
+        const adminUser = await databases.listDocuments(
+          appwriteConfig.databaseId,
+          appwriteConfig.collections.adminUsers,
+          [
+            // Filter by user ID
+            `$id=${user.$id}`
+          ]
+        );
+        
+        // If we found a record, this user is an admin/staff/owner
+        if (adminUser.documents.length > 0) {
+          // Delete the session we just created
+          await account.deleteSession('current');
+          
+          return {
+            success: false,
+            error: 'Staff and owner accounts must use the staff login page'
+          };
+        }
+      } catch (error) {
+        // If there's an error checking admin status, we'll continue
+        // This is safer than blocking a legitimate customer due to a DB error
+        console.log('Error checking admin status:', error);
+      }
 
       console.log("🎉 Customer login successful, returning user:", user.email);
       return {
