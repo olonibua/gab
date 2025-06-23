@@ -177,14 +177,14 @@ function PaymentCallbackContent() {
                 </div>
               )}
               <div className="space-y-3">
-                {verificationResult.orderId && (
+                {/* {verificationResult.orderId && ( */}
                   <Link
                     href={`/receipt/${verificationResult.orderId}?payment=success`}
                     className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
                   >
                     View Receipt
                   </Link>
-                )}
+                {/* )} */}
                 <Link
                   href="/dashboard"
                   className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium py-3 px-4 rounded-lg transition-colors"

@@ -97,7 +97,101 @@ function ReceiptPageContent() {
   };
 
   const handlePrint = () => {
-    window.print();
+    // Create a new window with only the receipt content
+    const receiptContent = document.getElementById('receipt-content');
+    if (!receiptContent || !order) {
+      console.error('Receipt content or order not found');
+      return;
+    }
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Please allow pop-ups to print the receipt');
+      return;
+    }
+
+    // Create a style element with print-specific styles
+    const printStyles = `
+      @page {
+        size: auto;
+        margin: 10mm;
+      }
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        background-color: white;
+      }
+      .receipt-container {
+        max-width: 210mm;
+        padding: 10mm;
+        background-color: white;
+      }
+      /* Fix for Tailwind classes that might not be included */
+      .text-blue-600 { color: #2563eb; }
+      .text-gray-600 { color: #4b5563; }
+      .text-gray-500 { color: #6b7280; }
+      .text-green-600 { color: #16a34a; }
+      .text-yellow-600 { color: #ca8a04; }
+      .text-red-600 { color: #dc2626; }
+      .font-bold { font-weight: 700; }
+      .font-semibold { font-weight: 600; }
+      .font-medium { font-weight: 500; }
+      .text-2xl { font-size: 1.5rem; }
+      .text-lg { font-size: 1.125rem; }
+      .text-sm { font-size: 0.875rem; }
+      .text-xs { font-size: 0.75rem; }
+      .mb-6 { margin-bottom: 1.5rem; }
+      .mb-3 { margin-bottom: 0.75rem; }
+      .mb-2 { margin-bottom: 0.5rem; }
+      .my-4 { margin-top: 1rem; margin-bottom: 1rem; }
+      .space-y-3 > * + * { margin-top: 0.75rem; }
+      .space-y-2 > * + * { margin-top: 0.5rem; }
+      .space-y-1 > * + * { margin-top: 0.25rem; }
+      .pt-4 { padding-top: 1rem; }
+      .border-t { border-top-width: 1px; }
+      .border-gray-200 { border-color: #e5e7eb; }
+      .flex { display: flex; }
+      .justify-between { justify-content: space-between; }
+      .text-center { text-align: center; }
+      .rounded-lg { border-radius: 0.5rem; }
+      .italic { font-style: italic; }
+      .capitalize { text-transform: capitalize; }
+      .flex-1 { flex: 1 1 0%; }
+      .text-right { text-align: right; }
+      .p-6 { padding: 1.5rem; }
+      hr { border: 0; border-top: 1px solid #e5e7eb; }
+    `;
+
+    // Set the content of the new window
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Order Receipt #${order.orderNumber}</title>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <style>${printStyles}</style>
+        </head>
+        <body>
+          <div class="receipt-container">
+            ${receiptContent.outerHTML}
+          </div>
+          <script>
+            // Auto print when loaded
+            window.onload = function() {
+              window.print();
+              // Close the window after printing (or if print is canceled)
+              setTimeout(() => window.close(), 500);
+            };
+          </script>
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
   };
 
   if (!isAuthenticated || !user) {
