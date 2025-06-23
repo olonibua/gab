@@ -1,10 +1,9 @@
 'use client';
 
-import { useRef } from 'react';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+import { useState, useRef } from 'react';
 import { Order, OrderItem, Service, DeliveryType } from '@/lib/types';
 import { formatNairaFromKobo } from '@/lib/validations';
+import html2pdf from 'html2pdf.js';
 
 interface OrderReceiptProps {
   order: Order;
@@ -20,6 +19,7 @@ export default function OrderReceipt({
   onPrint 
 }: OrderReceiptProps) {
   const receiptRef = useRef<HTMLDivElement>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const getServiceById = (serviceId: string) => {
     return services.find(s => s.$id === serviceId);
@@ -36,77 +36,66 @@ export default function OrderReceipt({
     });
   };
 
-  const downloadPDF = async () => {
-    if (!receiptRef.current) return;
+  const downloadPDF = () => {
+    if (isDownloading) return;
+    setIsDownloading(true);
 
-    try {
-      // Show loading state
-      const downloadBtn = document.getElementById('download-btn');
-      if (downloadBtn) {
-        downloadBtn.textContent = 'Generating PDF...';
-        (downloadBtn as HTMLButtonElement).disabled = true;
-      }
+    const receiptElement = document.getElementById('receipt-content');
+    if (!receiptElement) {
+      console.error('Receipt content element not found!');
+      setIsDownloading(false);
+      return;
+    }
 
-      // Add a small delay to ensure all elements are rendered
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    // Create a style element to forcefully override any oklch colors
+    const style = document.createElement('style');
+    style.id = 'temp-pdf-styles';
+    style.innerHTML = `
+      #receipt-content { background-color: #ffffff !important; }
+      .text-blue-600 { color: #2563eb !important; }
+      .text-gray-600 { color: #4b5563 !important; }
+      .text-gray-500 { color: #6b7280 !important; }
+      .text-green-600 { color: #16a34a !important; }
+      .text-yellow-600 { color: #ca8a04 !important; }
+      .text-red-600 { color: #dc2626 !important; }
+      .border-gray-200 { border-color: #e5e7eb !important; }
+    `;
+    document.head.appendChild(style);
 
-      // Create canvas from the receipt div
-      const canvas = await html2canvas(receiptRef.current, {
+    const opt = {
+      margin: 10,
+      filename: `receipt-${order.orderNumber}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
         scale: 2,
         useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff'
-      });
+        backgroundColor: '#ffffff',
+      },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    };
 
-      // Create PDF
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      
-      // Calculate dimensions to fit the image
-      const imgWidth = 210; // A4 width in mm
-      const pageHeight = 295; // A4 height in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-
-      let position = 0;
-
-      // Add image to PDF
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      // Add new pages if content is longer than one page
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      // Download the PDF
-      pdf.save(`receipt-${order.orderNumber}.pdf`);
-
-      // Reset button state
-      if (downloadBtn) {
-        downloadBtn.textContent = 'Download PDF';
-        (downloadBtn as HTMLButtonElement).disabled = false;
-      }
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
-      
-      // Reset button state
-      const downloadBtn = document.getElementById('download-btn');
-      if (downloadBtn) {
-        downloadBtn.textContent = 'Download PDF';
-        (downloadBtn as HTMLButtonElement).disabled = false;
-      }
-    }
+    // Use a timeout to ensure styles are applied before rendering
+    setTimeout(() => {
+      html2pdf()
+        .from(receiptElement)
+        .set(opt)
+        .save()
+        .catch((err: Error) => {
+          console.error('PDF download error:', err);
+          alert('Failed to generate PDF. Please check the console for errors.');
+        })
+        .finally(() => {
+          document.head.removeChild(style);
+          setIsDownloading(false);
+        });
+    }, 100); // 100ms delay
   };
 
   return (
     <div className="max-w-md mx-auto">
       <div 
         ref={receiptRef}
+        id="receipt-content"
         className="bg-white border border-gray-200 rounded-lg p-6 print:border-none print:shadow-none"
       >
         {/* Header */}
@@ -285,42 +274,42 @@ export default function OrderReceipt({
         {/* Footer */}
         <div className="text-center text-xs text-gray-500">
           <p>Thank you for choosing Gab'z Laundromat!</p>
-          <p>For support, contact us at support@gabzlaundromat.com</p>
+          <p>For support, contact us at gabzlaundromat408@gmail.com</p>
           <p>Receipt generated on {new Date().toLocaleDateString('en-NG')}</p>
         </div>
+      </div>
 
-        {/* Action Buttons */}
-        <div className="mt-6 text-center print:hidden space-y-3">
-          <div className="flex gap-3 justify-center">
+      {/* Action Buttons */}
+      <div className="mt-6 text-center print:hidden space-y-3">
+        {/* <div className="flex gap-3 justify-center">
+          <button
+            onClick={downloadPDF}
+            disabled={isDownloading}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 disabled:bg-green-400 disabled:cursor-not-allowed"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+            </svg>
+            <span>{isDownloading ? 'Generating...' : 'Download PDF'}</span>
+          </button>
+          
+          {onPrint && (
             <button
-              id="download-btn"
-              onClick={downloadPDF}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
+              onClick={onPrint}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
               </svg>
-              <span>Download PDF</span>
+              <span>Print Receipt</span>
             </button>
-            
-            {onPrint && (
-              <button
-                onClick={onPrint}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                </svg>
-                <span>Print Receipt</span>
-              </button>
-            )}
-          </div>
-          
-          <p className="text-xs text-gray-500">
-            Save or print your receipt for your records
-          </p>
-        </div>
+          )}
+        </div> */}
+        
+        <p className="text-xs text-gray-500">
+          Screenshot or print your receipt for your records
+        </p>
       </div>
     </div>
   );
-} 
+}

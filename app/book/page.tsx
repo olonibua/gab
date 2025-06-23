@@ -647,13 +647,13 @@ function BookPageContent() {
               {deliveryType === DeliveryType.DELIVERY && (
                 <div className="space-y-4 mt-6 p-4 bg-gray-50 rounded-lg">
                   <h4 className="font-semibold text-gray-900">Delivery Information</h4>
-                  
-                  {/* Pickup Address */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+
+              {/* Pickup Address */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                       Pickup Address *
-                    </label>
-                    <textarea
+                </label>
+                <textarea
                       value={bookingData.pickupAddress?.street || ''}
                       onChange={(e) => setBookingData(prev => ({ 
                         ...prev, 
@@ -665,19 +665,19 @@ function BookPageContent() {
                           landmark: prev.pickupAddress?.landmark
                         }
                       }))}
-                      rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                       placeholder="Enter your full pickup address including area and LGA"
                       required
-                    />
-                  </div>
+                />
+              </div>
 
-                  {/* Delivery Address */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+              {/* Delivery Address */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                       Delivery Address *
-                    </label>
-                    <textarea
+                </label>
+                <textarea
                       value={bookingData.deliveryAddress?.street || ''}
                       onChange={(e) => setBookingData(prev => ({ 
                         ...prev, 
@@ -689,22 +689,22 @@ function BookPageContent() {
                           landmark: prev.deliveryAddress?.landmark
                         }
                       }))}
-                      rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Enter delivery address (can be same as pickup)"
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter delivery address (can be same as pickup)"
                       required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setBookingData(prev => ({ 
-                        ...prev, 
+                />
+                <button
+                  type="button"
+                  onClick={() => setBookingData(prev => ({ 
+                    ...prev, 
                         deliveryAddress: prev.pickupAddress 
-                      }))}
-                      className="text-sm text-blue-600 hover:text-blue-700 mt-1"
-                    >
-                      Use same as pickup address
-                    </button>
-                  </div>
+                  }))}
+                  className="text-sm text-blue-600 hover:text-blue-700 mt-1"
+                >
+                  Use same as pickup address
+                </button>
+              </div>
 
                   {/* Contact Number */}
                   <div>
@@ -920,16 +920,16 @@ function BookPageContent() {
                     if (orderId) {
                       // Now initialize payment with the real order ID
                       const paymentData = {
-                        email: user?.email || '',
+                    email: user?.email || '',
                         amount: calculateTotal(),
-                        currency: 'NGN',
-                        metadata: {
+                    currency: 'NGN',
+                    metadata: {
                           orderId: orderId,
-                          customerId: user?.$id || '',
-                          customerName: user?.name || '',
-                          phoneNumber: user?.phone || ''
-                        },
-                        callback_url: `${window.location.origin}/payment/callback`
+                      customerId: user?.$id || '',
+                      customerName: user?.name || '',
+                      phoneNumber: user?.phone || ''
+                    },
+                    callback_url: `${window.location.origin}/payment/callback`
                       };
 
                       try {
