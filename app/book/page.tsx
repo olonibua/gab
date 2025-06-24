@@ -886,7 +886,7 @@ function BookPageContent() {
                     </div>
                   </button>
                   
-                  <button
+                  {/* <button
                     onClick={() => setBookingData(prev => ({ ...prev, paymentMethod: PaymentMethod.TRANSFER }))}
                     className={`p-4 text-left border rounded-lg transition-colors ${
                       bookingData.paymentMethod === PaymentMethod.TRANSFER
@@ -898,7 +898,7 @@ function BookPageContent() {
                     <div className="text-sm text-gray-500 mt-1">
                       Transfer to our account
                     </div>
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
