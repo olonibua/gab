@@ -92,7 +92,7 @@ export default function HomePage() {
             <div className={`text-center px-4 ${ac.fadeIn}`} style={{ animationDelay: '0.6s' }}>
               <p className="text-blue-200 mb-4 md:mb-6 text-base md:text-lg font-medium">🌍 Serving Lagos Areas:</p>
               <div className="flex flex-wrap justify-center gap-2 md:gap-3 max-w-4xl mx-auto">
-                {['Lagos Island', 'Victoria Island', 'Ikoyi', 'Lekki', 'Ikeja', 'Surulere', 'Yaba', 'Gbagada', 'Ajah',
+                {['Ajah',
 'Abraham Adesanya',
 'Sangotedo', 
 'United Estate', 
@@ -103,7 +103,7 @@ export default function HomePage() {
 'Awoyaya',
 'Ogidan',
 'Eleko', 
-'Dangote refinery'].map((area, index) => (
+'Dangote refinery','Lagos Island', 'Victoria Island', 'Ikoyi', 'Lekki', 'Ikeja', 'Surulere', 'Yaba', 'Gbagada', ].map((area, index) => (
                   <span
                     key={area}
                     className={`bg-white/20 backdrop-blur-sm text-white px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transform hover:scale-110 transition-all duration-300 hover:bg-white/30 border border-white/20 ${ac.fadeIn}`}
@@ -555,13 +555,7 @@ export default function HomePage() {
             <div>
               <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Service Areas</h4>
               <ul className="space-y-1.5 md:space-y-2 text-gray-400 text-sm md:text-base">
-                <li>Lagos Island</li>
-                <li>Victoria Island</li>
-                <li>Ikoyi</li>
-                <li>Lekki</li>
-                <li>Ikeja</li>
-                <li>Surulere</li>
-                <li>Ajah</li>
+              <li>Ajah</li>
                 <li>Abraham Adesanya
                 </li>
                 <li>Sangotedo</li>
@@ -579,6 +573,13 @@ export default function HomePage() {
                 </li>
                 <li>Eleko </li>
                 <li>Dangote refinery</li>
+                <li>Lagos Island</li>
+                <li>Victoria Island</li>
+                <li>Ikoyi</li>
+                <li>Lekki</li>
+                <li>Ikeja</li>
+                <li>Surulere</li>
+                
               </ul>
             </div>
 
