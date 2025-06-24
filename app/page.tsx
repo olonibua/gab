@@ -103,7 +103,7 @@ export default function HomePage() {
 'Awoyaya',
 'Ogidan',
 'Eleko', 
-'Dangote refinery'].map((area, index) => (
+'Dangote refinery'].map((area, index) => (
                   <span
                     key={area}
                     className={`bg-white/20 backdrop-blur-sm text-white px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transform hover:scale-110 transition-all duration-300 hover:bg-white/30 border border-white/20 ${ac.fadeIn}`}
@@ -156,8 +156,37 @@ export default function HomePage() {
               <span className="block md:inline bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Laundry Service</span>
             </h2>
             <p className="text-base md:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
-            A self-service laundry, is a facility where clothes and some household textiles are washed and dried without much personalized professional help
+            A self-service laundry, is a facility where clothes and some household textiles are washed and dried without much personalized professional help
             </p>
+          </div>
+
+          {/* Professional Facility Images */}
+          <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-16 ${ac.fadeIn}`} style={{ animationDelay: '0.1s' }}>
+            <div className="relative group overflow-hidden rounded-2xl md:rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500">
+              <img 
+                src="/icon/wash1.jpg" 
+                alt="Professional laundry facility with modern washing machines"
+                className="w-full h-64 md:h-80 object-cover transform group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <h3 className="text-lg md:text-xl font-bold mb-1">Modern Equipment</h3>
+                <p className="text-sm md:text-base text-gray-200">State-of-the-art washing machines for optimal care</p>
+              </div>
+            </div>
+            
+            <div className="relative group overflow-hidden rounded-2xl md:rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500">
+              <img 
+                src="/icon/wash2.jpg" 
+                alt="Clean and organized laundry workspace"
+                className="w-full h-64 md:h-80 object-cover transform group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <h3 className="text-lg md:text-xl font-bold mb-1">Professional Facility</h3>
+                <p className="text-sm md:text-base text-gray-200">Clean, organized workspace for premium service</p>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-12">
@@ -338,6 +367,30 @@ export default function HomePage() {
               Getting your laundry done professionally has never been easier. 
               Just follow these simple steps and let us handle the rest.
             </p>
+          </div>
+
+          {/* Process Illustration with Real Image */}
+          <div className={`mb-12 md:mb-16 ${ac.fadeIn}`} style={{ animationDelay: '0.1s' }}>
+            <div className="relative max-w-4xl mx-auto">
+              <div className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl">
+                <img 
+                  src="/icon/wash1.jpg" 
+                  alt="Professional laundry process in action"
+                  className="w-full h-48 md:h-64 lg:h-80 object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/80 to-purple-600/80"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 md:mb-4">
+                      Professional Laundry Process
+                    </h3>
+                    <p className="text-sm md:text-base lg:text-lg opacity-90 max-w-2xl px-4">
+                      Our state-of-the-art facility ensures your clothes receive the best care possible
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-12">
@@ -525,7 +578,7 @@ export default function HomePage() {
                 <li>Ogidan
                 </li>
                 <li>Eleko </li>
-                <li>Dangote refinery</li>
+                <li>Dangote refinery</li>
               </ul>
             </div>
 

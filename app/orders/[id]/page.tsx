@@ -184,8 +184,8 @@ function OrderDetailsContent({ params }: OrderDetailsPageProps) {
         alert('Failed to verify payment. Please contact support.');
       } finally {
         setIsVerifyingPayment(false);
-      }
-    };
+    }
+  };
 
   const getStatusColor = (status: OrderStatus) => {
     switch (status) {
