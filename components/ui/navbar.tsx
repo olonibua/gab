@@ -54,7 +54,6 @@ export function Navbar({
         if (isAuthenticated) {
           defaultLinks.push(
             { href: '/dashboard', label: 'Dashboard' },
-            { href: '/orders', label: 'My Orders' }
           );
         }
 

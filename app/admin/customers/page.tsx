@@ -12,6 +12,9 @@ interface CustomerWithStats extends User {
   totalOrders: number;
   totalSpent: number;
   lastOrderDate?: string;
+  name: string; // Computed from firstName + lastName
+  phoneNumber: string; // Computed from phone.number
+  role: string; // Added for filtering
 }
 
 export default function AdminCustomersPage() {
@@ -43,12 +46,12 @@ export default function AdminCustomersPage() {
       const customersResponse = await databaseService.getAllUsers();
       
       if (customersResponse.success && customersResponse.data) {
-        // Filter only customer users (not admin users)
-        const customerUsers = customersResponse.data.filter(user => user.role === 'customer');
+        // Get all users and filter/enhance them
+        const allUsers = customersResponse.data;
         
         // Get order statistics for each customer
         const customersWithStats = await Promise.all(
-          customerUsers.map(async (customer) => {
+          allUsers.map(async (customer) => {
             const ordersResponse = await databaseService.getOrdersByCustomer(customer.$id);
             
             let totalOrders = 0;
@@ -72,7 +75,10 @@ export default function AdminCustomersPage() {
               ...customer,
               totalOrders,
               totalSpent,
-              lastOrderDate
+              lastOrderDate,
+              name: `${customer.firstName} ${customer.lastName}`,
+              phoneNumber: customer.phone.number,
+              role: 'customer' // Assume all users from User table are customers
             };
           })
         );
@@ -360,7 +366,7 @@ export default function AdminCustomersPage() {
                             <p>📧 {customer.email}</p>
                             <p>📱 {formatPhoneNumber(customer.phoneNumber)}</p>
                             <p>
-                              📍 {customer.primaryAddress?.area || 'No address'} | 
+                              📍 {customer.addresses[0]?.area || 'No address'} | 
                               📅 Joined {new Date(customer.$createdAt).toLocaleDateString('en-NG', {
                                 year: 'numeric',
                                 month: 'short',

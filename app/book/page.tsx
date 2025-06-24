@@ -228,7 +228,6 @@ function BookPageContent() {
             <div className="hidden lg:flex items-center space-x-6">
               <Link href="/services" className="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">Services</Link>
               <Link href="/dashboard" className="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">Dashboard</Link>
-              <Link href="/orders" className="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">My Orders</Link>
             </div>
             
             <div className="flex items-center space-x-4">
@@ -275,12 +274,7 @@ function BookPageContent() {
                 </svg>
                 <span>Services</span>
               </Link>
-              <Link href="/orders" className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50/80 py-3 px-4 rounded-xl transition-all duration-200 backdrop-blur-sm">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-                <span>My Orders</span>
-              </Link>
+             
               <div className="border-t border-gray-200/50 mt-4 pt-4">
                 <div className="flex items-center space-x-3 px-4 py-2">
                   <div className="w-8 h-8 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full flex items-center justify-center">
