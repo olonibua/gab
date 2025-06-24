@@ -101,7 +101,6 @@ export default function OrderReceipt({
         {/* Header */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-bold text-blue-600">Gab'z Laundromat</h1>
-          <p className="text-sm text-gray-600">Professional Laundry Services</p>
           <p className="text-sm text-gray-600">Lagos, Nigeria</p>
           <hr className="my-4" />
           <h2 className="text-lg font-semibold">Order Receipt</h2>
@@ -255,12 +254,19 @@ export default function OrderReceipt({
         </div>
 
         {/* Instructions */}
-        <div className="mb-6 text-center text-sm text-gray-600">
+        <div className="mb-6  text-xs text-gray-600">
           {order.deliveryType === DeliveryType.PICKUP ? (
             <div>
-              <p className="font-medium">Next Steps:</p>
+              <p className="font-medium">Terms of Acceptance:</p>
+              <ol className="list-decimal list-inside space-y-2">
+                <li>All items are to be checked properly at point of collection as any complaints after 24hrs of pick up or delivery won't be entertained
+                </li>
+                <li>Items dropped for cleaning if not collected after 3 months of ready/due date, our company will no longer be responsible for them</li>
+              </ol>
+              <div className="mt-2">
               <p>Bring this receipt when dropping off your items at our store.</p>
               <p>We'll contact you when your order is ready for pickup.</p>
+              </div>
             </div>
           ) : (
             <div>

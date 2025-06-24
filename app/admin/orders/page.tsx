@@ -211,7 +211,7 @@ function AdminOrdersPage() {
             </div>
           </div>
         </div>
-      </div>
+        </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
         {/* Enhanced Filters */}
@@ -223,19 +223,19 @@ function AdminOrdersPage() {
                 Order Status
               </label>
               <div className="relative">
-                <select
-                  value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value as OrderStatus | 'all')}
+              <select
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value as OrderStatus | 'all')}
                   className="w-full appearance-none px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
-                >
-                  <option value="all">All Orders</option>
+              >
+                <option value="all">All Orders</option>
                   <option value={OrderStatus.PENDING}>⏳ Pending</option>
                   <option value={OrderStatus.PICKED_UP}>🚚 Picked Up</option>
                   <option value={OrderStatus.IN_PROGRESS}>🧽 In Progress</option>
                   <option value={OrderStatus.READY}>✅ Ready</option>
                   <option value={OrderStatus.DELIVERED}>📦 Delivered</option>
                   <option value={OrderStatus.CANCELLED}>❌ Cancelled</option>
-                </select>
+              </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -250,11 +250,11 @@ function AdminOrdersPage() {
                 Search Orders
               </label>
               <div className="relative">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Order number, address..."
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Order number, address..."
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                 />
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -362,7 +362,7 @@ function AdminOrdersPage() {
                   >
                     {/* Mobile Layout */}
                     <div className="block md:hidden space-y-4">
-                      <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                           <div className="w-12 h-12 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-300">
                             {getStatusIcon(order.status)}

@@ -92,7 +92,18 @@ export default function HomePage() {
             <div className={`text-center px-4 ${ac.fadeIn}`} style={{ animationDelay: '0.6s' }}>
               <p className="text-blue-200 mb-4 md:mb-6 text-base md:text-lg font-medium">🌍 Serving Lagos Areas:</p>
               <div className="flex flex-wrap justify-center gap-2 md:gap-3 max-w-4xl mx-auto">
-                {['Lagos Island', 'Victoria Island', 'Ikoyi', 'Lekki', 'Ikeja', 'Surulere', 'Yaba', 'Gbagada'].map((area, index) => (
+                {['Lagos Island', 'Victoria Island', 'Ikoyi', 'Lekki', 'Ikeja', 'Surulere', 'Yaba', 'Gbagada', 'Ajah',
+'Abraham Adesanya',
+'Sangotedo', 
+'United Estate', 
+'GRA',
+'Fara park Estate', 
+'Thomas Estate',
+'Ibeju lekki',
+'Awoyaya',
+'Ogidan',
+'Eleko', 
+'Dangote refinery'].map((area, index) => (
                   <span
                     key={area}
                     className={`bg-white/20 backdrop-blur-sm text-white px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transform hover:scale-110 transition-all duration-300 hover:bg-white/30 border border-white/20 ${ac.fadeIn}`}
@@ -140,12 +151,12 @@ export default function HomePage() {
               Why Choose Us
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 md:mb-6 px-4">
-              Lagos' Most Trusted 
+            LAUNDROMAT
+
               <span className="block md:inline bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Laundry Service</span>
             </h2>
             <p className="text-base md:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
-              We understand the fast-paced lifestyle in Lagos. That's why we've designed our service 
-              to be as convenient, reliable, and professional as possible.
+            A self-service laundry, is a facility where clothes and some household textiles are washed and dried without much personalized professional help
             </p>
           </div>
 
@@ -497,6 +508,24 @@ export default function HomePage() {
                 <li>Lekki</li>
                 <li>Ikeja</li>
                 <li>Surulere</li>
+                <li>Ajah</li>
+                <li>Abraham Adesanya
+                </li>
+                <li>Sangotedo</li>
+                <li>United Estate</li>
+                <li>GRA
+                </li>
+                <li>Fara park Estate</li>
+                <li>Thomas Estate
+                </li>
+                <li>Ibeju lekki
+                </li>
+                <li>Awoyaya
+                </li>
+                <li>Ogidan
+                </li>
+                <li>Eleko </li>
+                <li>Dangote refinery</li>
               </ul>
             </div>
 
